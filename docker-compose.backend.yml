@@ -6,17 +6,29 @@ services:
     container_name: chem_db_prod
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
-    env_file: .env # Docker Compose v2 отлично работает с этим
+    # --- ПЕРЕДАЕМ ПЕРЕМЕННЫЕ НАПРЯМУЮ ---
+    environment:
+      POSTGRES_DB: chem_db_prod
+      POSTGRES_USER: chem_user_prod
+      POSTGRES_PASSWORD: supersecretpassword123 # <-- ВАШ ПАРОЛЬ ПРЯМО ЗДЕСЬ
     restart: always
 
   backend:
     build: ./backend
     container_name: chem_backend_prod
-    # Возвращаем команду для Gunicorn
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     ports:
       - "8000:8000"
-    env_file: .env
+    # --- ПЕРЕДАЕМ ПЕРЕМЕННЫЕ НАПРЯМУЮ ---
+    environment:
+      - DEBUG=${DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      # Переменные для подключения к базе
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - DATABASE_URL=postgres://chem_user_prod:supersecretpassword123@db:5432/chem_db_prod
     restart: always
     depends_on:
       - db
