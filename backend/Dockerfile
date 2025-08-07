@@ -1,25 +1,16 @@
-FROM python:3.10-alpine 
+# Используем легковесный, но стабильный образ
+FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-# Устанавливаем зависимости для сборки (удалятся после установки)
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+# Устанавливаем зависимости psycopg2
+# RUN apt-get update && apt-get install -y postgresql-client
 
 COPY requirements.txt /app/
+# Используем --no-cache-dir для уменьшения размера образа
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем наш новый скрипт
-COPY entrypoint.sh /app/entrypoint.sh
-# Делаем его исполняемым
-RUN chmod +x /app/entrypoint.sh
-
-# Удаляем зависимости для сборки
-RUN apk del .build-deps
-
 COPY . /app/
-
-# Указываем Docker запускать наш скрипт при старте контейнера
-ENTRYPOINT ["/app/entrypoint.sh"]
