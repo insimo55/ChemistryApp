@@ -1,4 +1,4 @@
-version: '3.8' # Версию можно оставить, старый docker-compose ее просто проигнорирует
+version: '3.8'
 
 services:
   db:
@@ -6,7 +6,7 @@ services:
     container_name: chem_db_dev
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data/
-    # Передаем переменные в `environment`, docker-compose 1.x возьмет их из .env
+    # Эти переменные нужны, чтобы PostgreSQL создал базу и пользователя
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -20,9 +20,12 @@ services:
       - ./backend:/app
     ports:
       - "8000:8000"
-    # Указываем env_file ВНУТРИ сервиса
-    env_file:
-      - .env
+    # Явно передаем ВСЕ переменные, которые нужны Django
+    environment:
+      - DEBUG=${DEBUG}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS} # Не забудьте добавить эту переменную в .env
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
     restart: always
