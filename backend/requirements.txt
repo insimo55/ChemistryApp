@@ -11,3 +11,4 @@ dj-database-url # <--- Вот эта строка важна!
 django-cors-headers
 django-filter 
 gunicorn
+whitenoise
