@@ -1,0 +1,13 @@
+# backend/requirements.txt
+
+Django==4.2
+psycopg2-binary
+djangorestframework
+djangorestframework-simplejwt
+djoser
+python-dotenv
+Pillow
+dj-database-url # <--- Вот эта строка важна!
+django-cors-headers
+django-filter 
+gunicorn
