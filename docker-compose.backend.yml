@@ -1,13 +1,16 @@
 version: '3.8'
 
-env_file: .env
 services:
   db:
     image: postgres:13
     container_name: chem_db_prod
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
-    env_file: .env
+    # Точно так же, используем environment
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     restart: always
 
   backend:
@@ -15,7 +18,8 @@ services:
     container_name: chem_backend_prod
     command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     ports:
-      - "8000:8000" # Открываем порт 8000 наружу, чтобы API было доступно
+      - "8000:8000"
+    # env_file ВНУТРИ сервиса
     env_file: .env
     restart: always
     depends_on:
