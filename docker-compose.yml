@@ -1,41 +1,40 @@
-# chemical-accounting/docker-compose.yml
 version: '3.8'
 
 services:
   db:
     image: postgres:13
-    container_name: chem_db
+    container_name: chem_db_dev
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=chem_user
-      - POSTGRES_PASSWORD=chem_password
-      - POSTGRES_DB=chem_db
-    ports:
-      - "5432:5432"
+      - postgres_data_dev:/var/lib/postgresql/data/
+    # Используем .env из корня
+    env_file: .env
 
   backend:
     build: ./backend
-    container_name: chem_backend
-    # Используем команду-заглушку, чтобы контейнер оставался запущенным
+    container_name: chem_backend_dev
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
+    # Используем .env из корня
+    env_file: .env
     depends_on:
       - db
+    restart: always
 
   frontend:
     build: ./frontend
-    container_name: chem_frontend
+    container_name: chem_frontend_dev
+    command: npm run dev
     volumes:
       - ./frontend:/app
-      - /app/node_modules  # Важный трюк, чтобы не перезатирать node_modules из контейнера
+      - /app/node_modules
     ports:
-      - "5173:5173" # Стандартный порт Vite
+      - "5173:5173"
+    restart: always
+    depends_on:
+      - backend
 
 volumes:
-  postgres_data:
+  postgres_data_dev:
