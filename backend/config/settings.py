@@ -92,11 +92,27 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+
+# --- ДОБАВЬТЕ ЭТОТ БЛОК ДЛЯ ОТЛАДКИ ---
+print("--- Отладка переменных окружения в settings.py ---")
+print(f"DEBUG from env: {os.getenv('DEBUG')}")
+print(f"POSTGRES_DB from env: {os.getenv('POSTGRES_DB')}")
+print(f"POSTGRES_USER from env: {os.getenv('POSTGRES_USER')}")
+print(f"POSTGRES_PASSWORD from env: {os.getenv('POSTGRES_PASSWORD')}")
+print("-------------------------------------------------")
+# --- КОНЕЦ ОТЛАДОЧНОГО БЛОКА ---
+
+
+
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',
+        'PORT': 5432,
+    }
 }
 
 
