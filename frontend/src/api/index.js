@@ -5,13 +5,9 @@ import { useAuthStore } from '../store/auth';
 
 // --- ДИНАМИЧЕСКОЕ ОПРЕДЕЛЕНИЕ API_URL ---
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // --- КОНЕЦ ДИНАМИЧЕСКОГО ОПРЕДЕЛЕНИЯ ---
-if (!API_BASE_URL) {
-  console.error("Критическая ошибка: VITE_API_BASE_URL не установлена!");
-  // В реальном приложении здесь можно было бы показать заглушку.
-}
 
 const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api`, // Базовый URL нашего бэкенда
@@ -82,4 +78,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export { apiClient, API_BASE_URL };
+export default apiClient;
