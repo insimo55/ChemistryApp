@@ -5,25 +5,13 @@ import { useAuthStore } from '../store/auth';
 
 // --- ДИНАМИЧЕСКОЕ ОПРЕДЕЛЕНИЕ API_URL ---
 
-function getApiBaseUrl() {
-  const viteApiUrl = import.meta.env.VITE_API_BASE_URL;
-
-  // Если мы в режиме разработки и фронтенд открыт на localhost,
-  // то и API скорее всего там же.
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return viteApiUrl; // Используем http://localhost:8000 из .env
-  }
-
-  // Если фронтенд открыт по сетевому IP (например, 192.168.1.104),
-  // то и API должно быть доступно по этому же хосту, но на порту 8000.
-  // window.location.protocol -> "http:"
-  // window.location.hostname -> "192.168.1.104"
-  return `${window.location.protocol}//${window.location.hostname}:8000`;
-}
-
-export const API_BASE_URL = getApiBaseUrl();
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // --- КОНЕЦ ДИНАМИЧЕСКОГО ОПРЕДЕЛЕНИЯ ---
+if (!API_BASE_URL) {
+  console.error("Критическая ошибка: VITE_API_BASE_URL не установлена!");
+  // В реальном приложении здесь можно было бы показать заглушку.
+}
 
 const apiClient = axios.create({
   baseURL: `${API_BASE_URL}/api`, // Базовый URL нашего бэкенда
@@ -94,4 +82,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export { apiClient, API_BASE_URL };
