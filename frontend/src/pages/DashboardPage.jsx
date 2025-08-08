@@ -1,7 +1,7 @@
 // frontend/src/pages/Dashboard.jsx
 import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation  } from 'react-router-dom';
-import apiClient from '../api';
+import { apiClient, API_BASE_URL } from '../api';
 
 function DashboardPage() {
   const [facilities, setFacilities] = useState([]);

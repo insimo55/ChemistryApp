@@ -1,7 +1,7 @@
 // frontend/src/pages/NewOperationPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation, useParams  } from 'react-router-dom';
-import apiClient from '../api';
+import { apiClient, API_BASE_URL } from '../api';
 import { useAuthStore } from '../store/auth';
 import Modal from '../components/Modal';
 import ChemicalForm from '../components/ChemicalForm';
