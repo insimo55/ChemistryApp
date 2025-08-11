@@ -1,5 +1,5 @@
 // frontend/src/pages/NewOperationPage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo  } from 'react';
 import { useNavigate, useLocation, useParams  } from 'react-router-dom';
 import  apiClient, {API_BASE_URL } from '../api';
 import { useAuthStore } from '../store/auth';
