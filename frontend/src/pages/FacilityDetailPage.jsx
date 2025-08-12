@@ -63,7 +63,7 @@ function FacilityDetailPage() {
               start_date: startDate,
               end_date: endDate,
           });
-          const response = await apiClient.get(`/api/reports/facility-period/?${params.toString()}`);
+          const response = await apiClient.get(`/reports/facility-period/?${params.toString()}`);
           setReport(response.data);
       } finally {
           setReportLoading(false);
