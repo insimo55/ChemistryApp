@@ -28,7 +28,10 @@ function FacilityDetailPage() {
         apiClient.get(`/inventory/?facility=${id}`) // <-- Этот запрос уже возвращает отфильтрованные данные
       ]);
       setFacility(facilityRes.data);
-      setInventoryForFacility(inventoryRes.data); // <-- Сохраняем отфильтрованные данные в правильное состояние
+      const inventoryData = inventoryRes.data.results || inventoryRes.data;
+      // Фильтруем массив, оставляя только те элементы, где количество НЕ равно 0
+      const filteredInventory = inventoryData.filter(item => parseFloat(item.quantity) !== 0);
+      setInventoryForFacility(filteredInventory); // <-- Сохраняем отфильтрованные данные в правильное состояние
     } catch (err) {
       setError('Не удалось загрузить данные. Попробуйте обновить страницу.');
       console.error(err);
@@ -79,8 +82,11 @@ function FacilityDetailPage() {
               inventoryForFacility.map((item) => (
                 <tr 
                   key={item.id} 
-                  className="hover:bg-gray-100 cursor-pointer" 
-                  onClick={() => setHistoryChemical(item.chemical)} // <-- При клике сохраняем объект реагента
+                  // Добавляем условные классы
+                  className={`hover:bg-gray-100 cursor-pointer ${
+                    parseFloat(item.quantity) < 0 ? 'bg-red-100 text-red-800 font-semibold' : ''
+                  }`}
+                  onClick={() => setHistoryChemical(item.chemical)}
                   title="Нажмите, чтобы посмотреть историю операций"
                 >
                   <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">{item.chemical.name}</td>
