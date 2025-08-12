@@ -26,8 +26,8 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
                 const params = new URLSearchParams({
                     facility: facilityId,
                     chemical: chemical.id,
-                    start_date: `${startDate}T00:00:00`, 
-                    end_date: `${endDate}T23:59:59`
+                    start_date: `${startDate}`, 
+                    end_date: `${endDate}`
                 });
                 const response = await apiClient.get(`/transactions/?${params.toString()}`);
                 
