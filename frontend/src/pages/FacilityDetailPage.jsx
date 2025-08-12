@@ -18,17 +18,18 @@ function FacilityDetailPage() {
     // Состояния для отчета (данные и даты)
     const [reportData, setReportData] = useState(null);
     const [reportLoading, setReportLoading] = useState(false); // Загрузка только отчета
-    
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
     // Устанавливаем даты по умолчанию
-    const getFirstDayOfMonth = () => {
-        const date = new Date();
-        return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
-    };
-    const getToday = () => {
-        return new Date().toISOString().split('T')[0];
-    };
-    const [startDate, setStartDate] = useState(getFirstDayOfMonth());
-    const [endDate, setEndDate] = useState(getToday());
+    // const getFirstDayOfMonth = () => {
+    //     const date = new Date();
+    //     return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    // };
+    // const getToday = () => {
+    //     return new Date().toISOString().split('T')[0];
+    // };
+    // const [startDate, setStartDate] = useState(getFirstDayOfMonth());
+    // const [endDate, setEndDate] = useState(getToday());
 
     // Состояние для модального окна истории по одному реагенту
     const [historyChemical, setHistoryChemical] = useState(null);
