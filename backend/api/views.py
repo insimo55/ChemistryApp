@@ -11,7 +11,7 @@ from .serializers import (ChemicalSerializer, FacilitySerializer,
                           InventorySerializer, TransactionSerializer, UserSerializer)
 from .services import recalculate_inventory_for_items
 from .helpers import validate_and_create_operation
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F
 
 
 # Важно! Пока мы не настроили права доступа,
@@ -118,7 +118,47 @@ class InventoryReportAPIView(generics.GenericAPIView):
         return Response(report_data, status=status.HTTP_200_OK)
 
     
+class FacilityReportAPIView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        facility_id = request.query_params.get('facility_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not all([facility_id, start_date, end_date]):
+            raise ValidationError("Необходимо указать facility_id, start_date и end_date.")
+
+        # 1. Начальный остаток (агрегируем по всем реагентам)
+        opening_income = Transaction.objects.filter(
+            to_facility_id=facility_id, operation_date__lt=start_date
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+        
+        opening_outcome = Transaction.objects.filter(
+            from_facility_id=facility_id, operation_date__lt=start_date
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+        
+        opening_balance = opening_income - opening_outcome
+
+        # 2. Приход/Расход за период (агрегируем по всем реагентам)
+        period_income = Transaction.objects.filter(
+            to_facility_id=facility_id, operation_date__range=[start_date, end_date]
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+
+        period_outcome = Transaction.objects.filter(
+            from_facility_id=facility_id, operation_date__range=[start_date, end_date]
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+        
+        # 3. Конечный остаток
+        closing_balance = opening_balance + period_income - period_outcome
+        
+        report_data = {
+            'opening_balance_total': opening_balance,
+            'total_income_period': period_income,
+            'total_outcome_period': period_outcome,
+            'closing_balance_total': closing_balance,
+        }
+        return Response(report_data, status=status.HTTP_200_OK)
 
 class BulkOperationAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]

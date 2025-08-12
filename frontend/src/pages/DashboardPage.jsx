@@ -20,7 +20,10 @@ function DashboardPage() {
           apiClient.get('/inventory/')
         ]);
         setFacilities(facilitiesRes.data);
-        setInventory(inventoryRes.data);
+        const inventoryData = inventoryRes.data;
+            // Сразу фильтруем нулевые остатки
+        const filteredInventory = inventoryData.filter(item => parseFloat(item.quantity) !== 0);
+        setInventory(filteredInventory);
       } finally {
         setLoading(false);
       }

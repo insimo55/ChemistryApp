@@ -17,6 +17,12 @@ function FacilityDetailPage() {
   const [historyChemical, setHistoryChemical] = useState(null); // null - окно закрыто, объект chemical - открыто
   const location = useLocation();
 
+  // --- НОВЫЕ СОСТОЯНИЯ ДЛЯ ОТЧЕТА ---
+    const [report, setReport] = useState(null);
+    const [reportLoading, setReportLoading] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+
   // Функция для загрузки данных
   const fetchData = useCallback(async () => {
     setError('');
@@ -48,6 +54,22 @@ function FacilityDetailPage() {
   if (loading) return <p>Загрузка данных по объекту...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
+  const handleCalculateReport = async () => {
+      if (!startDate || !endDate) { alert("Выберите период."); return; }
+      setReportLoading(true);
+      try {
+          const params = new URLSearchParams({
+              facility_id: id,
+              start_date: startDate,
+              end_date: endDate,
+          });
+          const response = await apiClient.get(`/api/reports/facility-period/?${params.toString()}`);
+          setReport(response.data);
+      } finally {
+          setReportLoading(false);
+      }
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -63,6 +85,33 @@ function FacilityDetailPage() {
         >
             Провести операцию
         </Link>
+      </div>
+      {/* --- НОВЫЙ БЛОК ОТЧЕТА --- */}
+      <div className="p-4 border rounded-lg mb-6 bg-white shadow-sm">
+          <h3 className="font-semibold mb-2">Общий отчет по объекту за период</h3>
+          <div className="flex items-end gap-4 mb-4">
+              {/* ... (поля для startDate, endDate и кнопка "Сформировать", как в ChemicalHistory) ... */}
+          </div>
+          {report && (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                  <div>
+                      <div className="text-xs text-gray-500">Начальный остаток</div>
+                      <div className="text-lg font-bold">{report.opening_balance_total}</div>
+                  </div>
+                  <div>
+                      <div className="text-xs text-green-600">Приход</div>
+                      <div className="text-lg font-bold text-green-600">+{report.total_income_period}</div>
+                  </div>
+                  <div>
+                      <div className="text-xs text-red-600">Расход</div>
+                      <div className="text-lg font-bold text-red-600">-{report.total_outcome_period}</div>
+                  </div>
+                    <div>
+                      <div className="text-xs text-gray-500">Конечный остаток</div>
+                      <div className="text-lg font-bold">{report.closing_balance_total}</div>
+                  </div>
+              </div>
+          )}
       </div>
 
       <h2 className="text-2xl font-semibold mb-4">Остатки на объекте</h2>
