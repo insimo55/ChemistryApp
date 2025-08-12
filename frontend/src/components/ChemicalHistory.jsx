@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api';
 
-function ChemicalHistory({ chemical, facilityId }) {
+function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -15,7 +15,7 @@ function ChemicalHistory({ chemical, facilityId }) {
 
     useEffect(() => {
         const fetchHistory = async () => {
-            if (!chemical || !facilityId) return; // Защита от запуска без данных
+            if (!chemical || !facilityId || !startDate || !endDate) return; // Защита от запуска без данных
 
             setLoading(true);
             setError('');
@@ -25,6 +25,8 @@ function ChemicalHistory({ chemical, facilityId }) {
                 const params = new URLSearchParams({
                     facility: facilityId,
                     chemical: chemical.id,
+                    start_date: startDate,
+                    end_date: endDate,
                 });
                 const response = await apiClient.get(`/transactions/?${params.toString()}`);
                 
@@ -39,71 +41,22 @@ function ChemicalHistory({ chemical, facilityId }) {
             }
         };
         fetchHistory();
-    }, [chemical, facilityId]); // Эффект перезапустится, если изменятся chemical или facilityId
+    }, [chemical, facilityId, startDate, endDate]); // Эффект перезапустится, если изменятся chemical или facilityId
 
     if (loading) return <p className="text-center p-4">Загрузка истории...</p>;
     if (error) return <p className="text-center p-4 text-red-500">{error}</p>;
 
-    const handleCalculateReport = async () => {
-        if (!startDate || !endDate) {
-            alert("Пожалуйста, выберите начальную и конечную дату.");
-            return;
-        }
-        setReportLoading(true);
-        try {
-            const params = new URLSearchParams({
-                facility_id: facilityId,
-                chemical_id: chemical.id,
-                start_date: startDate,
-                end_date: endDate,
-            });
-            const response = await apiClient.get(`/reports/inventory-period/?${params.toString()}`);
-            setReport(response.data);
-        } catch (error) {
-            console.error("Failed to calculate report", error);
-        } finally {
-            setReportLoading(false);
-        }
-    };
+    
 
     return (
-        <div className="p-1"> {/* Небольшой общий padding */}
-            <h3 className="text-xl font-bold mb-4 text-gray-800 px-1">История: {chemical.name}</h3>
-            {/* --- БЛОК ДЛЯ ОТЧЕТА --- */}
-            <div className="p-4 border rounded-md mb-4 bg-gray-50">
-                <h4 className="font-semibold mb-2">Отчет за период</h4>
-                <div className="flex items-end gap-4">
-                    <div>
-                        <label className="text-xs">С даты</label>
-                        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="p-1 border rounded w-full"/>
-                    </div>
-                    <div>
-                        <label className="text-xs">По дату</label>
-                        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="p-1 border rounded w-full"/>
-                    </div>
-                    <button onClick={handleCalculateReport} disabled={reportLoading} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 disabled:bg-gray-400">
-                        {reportLoading ? '...' : 'Сформировать'}
-                    </button>
-                </div>
-                {report && (
-                    <div className="mt-4 grid grid-cols-2 gap-2 text-sm border-t pt-4">
-                        <strong>Начальный остаток:</strong> <span>{report.opening_balance}</span>
-                        <strong className="text-green-600">Приход за период:</strong> <span className="text-green-600">{report.total_income}</span>
-                        <strong className="text-red-600">Расход за период:</strong> <span className="text-red-600">{report.total_outcome}</span>
-                        <strong>Конечный остаток:</strong> <span>{report.closing_balance}</span>
-                    </div>
-                )}
-            </div>
-
-            <strong className="block text-sm text-gray-500 mb-2">Движение по операциям</strong>
+        <div className="p-2 max-w-lg w-screen">
+            <h3 className="text-xl font-bold mb-1 text-gray-800">Движение: {chemical.name}</h3>
+            <p className="text-sm text-gray-500 mb-4">
+                за период с {new Date(startDate).toLocaleDateString('ru-RU')} по {new Date(endDate).toLocaleDateString('ru-RU')}
+            </p>
             
-            {/* --- КОНТЕЙНЕР ДЛЯ ПРОКРУТКИ --- */}
-            {/* Он задает высоту и включает overflow. У него НЕТ горизонтальных отступов. */}
-            <div className="max-h-[40vh] overflow-y-auto">
-            
-                {/* --- КОНТЕЙНЕР ДЛЯ КОНТЕНТА --- */}
-                {/* У него есть отступы, которые не дадут тексту прилипнуть к краям и скроллбару. */}
-                <div className="space-y-2 pr-2"> {/* pr-2 - отступ справа от скроллбара */}
+            <div className="max-h-[60vh] overflow-y-auto">
+                <div className="space-y-2 pr-2">
                     {history.length > 0 ? (
                         history.map(tx => {
                             const isIncome = tx.to_facility_id === parseInt(facilityId);
@@ -111,11 +64,11 @@ function ChemicalHistory({ chemical, facilityId }) {
                             const quantityColor = isIncome ? 'text-green-600' : 'text-red-600';
 
                             return (
-                                <div key={tx.id} className="p-3 bg-gray-50 rounded-md border grid grid-cols-3 gap-2 items-center">
-                                    <div className="text-sm text-gray-600">
-                                        {new Date(tx.operation_date).toLocaleDateString('ru-RU')}
+                                <div key={tx.id} className="p-3 bg-gray-50 rounded-md border grid grid-cols-3 gap-2 items-center text-sm">
+                                    <div className="text-gray-600">
+                                        {new Date(tx.operation_date).toLocaleString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
                                     </div>
-                                    <div className={`font-semibold font-mono text-center text-lg ${quantityColor}`}>
+                                    <div className={`font-semibold font-mono text-center ${quantityColor}`}>
                                         {quantitySign} {tx.quantity}
                                     </div>
                                     <div className="text-xs text-right text-gray-500 capitalize">
@@ -130,7 +83,7 @@ function ChemicalHistory({ chemical, facilityId }) {
                             );
                         })
                     ) : (
-                        <p className="text-center p-4 text-gray-500">История по этому реагенту на данном объекте отсутствует.</p>
+                        <p className="text-center p-4 text-gray-500">Движения по этому реагенту за выбранный период отсутствуют.</p>
                     )}
                 </div>
             </div>
