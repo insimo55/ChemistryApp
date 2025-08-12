@@ -9,19 +9,31 @@ import ChemicalHistory from '../components/ChemicalHistory'; // <-- Импорт
 
 function FacilityDetailPage() {
   const { id } = useParams(); // Получаем id объекта из URL
-  const [facility, setFacility] = useState(null);
-  const [inventoryForFacility, setInventoryForFacility] = useState([]); // Состояние для остатков ИМЕННО ЭТОГО ОБЪЕКТА
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  const [historyChemical, setHistoryChemical] = useState(null); // null - окно закрыто, объект chemical - открыто
   const location = useLocation();
+  // Состояния для основной информации об объекте
+    const [facility, setFacility] = useState(null);
+    const [loading, setLoading] = useState(true); // Общая загрузка страницы
+    const [error, setError] = useState('');
 
-  // --- НОВЫЕ СОСТОЯНИЯ ДЛЯ ОТЧЕТА ---
-  const [reportData, setReportData] = useState(null);
-  const [reportLoading, setReportLoading] = useState(false);
-  const [startDate, setStartDate] = useState(/* Установить дату по умолчанию, например, начало месяца */);
-  const [endDate, setEndDate] = useState(/* Установить сегодня */);
+    // Состояния для отчета (данные и даты)
+    const [reportData, setReportData] = useState(null);
+    const [reportLoading, setReportLoading] = useState(false); // Загрузка только отчета
+    
+    // Устанавливаем даты по умолчанию
+    const getFirstDayOfMonth = () => {
+        const date = new Date();
+        return new Date(date.getFullYear(), date.getMonth(), 1).toISOString().split('T')[0];
+    };
+    const getToday = () => {
+        return new Date().toISOString().split('T')[0];
+    };
+    const [startDate, setStartDate] = useState(getFirstDayOfMonth());
+    const [endDate, setEndDate] = useState(getToday());
+
+    // Состояние для модального окна истории по одному реагенту
+    const [historyChemical, setHistoryChemical] = useState(null);
+    
+    // --- КОНЕЦ БЛОКА СОСТОЯНИЙ ---
 
   // const fetchData = useCallback(async () => {
   //   setError('');
