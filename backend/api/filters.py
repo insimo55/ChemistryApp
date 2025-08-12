@@ -4,8 +4,8 @@ from .models import Transaction, Facility
 from django.db.models import Q
 
 class TransactionFilter(filters.FilterSet):
-    start_date = filters.DateFilter(field_name="operation_date", lookup_expr='gte')
-    end_date = filters.DateFilter(field_name="operation_date", lookup_expr='lte')
+    start_date = filters.DateTimeFilter(field_name="operation_date", lookup_expr='gte')
+    end_date = filters.DateTimeFilter(field_name="operation_date", lookup_expr='lte')
     facility = filters.ModelChoiceFilter(queryset=Facility.objects.all(), method='filter_by_facility')
 
     # Новый кастомный фильтр для поиска по любому объекту
