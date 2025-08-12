@@ -49,7 +49,7 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     
 
     return (
-        <div className="p-2 max-w-lg w-screen">
+        <div className="p-2">
             <h3 className="text-xl font-bold mb-1 text-gray-800">Движение: {chemical.name}</h3>
             <p className="text-sm text-gray-500 mb-4">
                 за период с {new Date(startDate).toLocaleDateString('ru-RU')} по {new Date(endDate).toLocaleDateString('ru-RU')}
