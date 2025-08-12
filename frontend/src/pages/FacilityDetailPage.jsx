@@ -40,7 +40,7 @@ function FacilityDetailPage() {
         setError('');
         try {
             // Загружаем и инфо об объекте, и отчет параллельно
-            const params = new URLSearchParams({ facility_id: id, start_date: startDate, end_date: endDate });
+            const params = new URLSearchParams({ facility_id: id, start_date: `${startDate}T00:00:00`, end_date: `${endDate}T23:59:59` });
             const [facilityRes, reportRes] = await Promise.all([
                 apiClient.get(`/facilities/${id}/`),
                 apiClient.get(`/reports/facility-detail/?${params.toString()}`)

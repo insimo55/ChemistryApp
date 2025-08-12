@@ -43,8 +43,17 @@ function TransactionsPage() {
       // Добавляем в запрос только те фильтры, у которых есть значение
       Object.entries(filters).forEach(([key, value]) => {
         if (value) {
-          params.append(key, value);
-        }
+                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+                    if (key === 'start_date') {
+                        // Добавляем время "начало дня"
+                        params.append(key, `${value}T00:00:00`);
+                    } else if (key === 'end_date') {
+                        // Добавляем время "конец дня"
+                        params.append(key, `${value}T23:59:59`);
+                    } else {
+                        params.append(key, value);
+                    }
+                }
       });
       
       const response = await apiClient.get(`/transactions/?${params.toString()}`);
