@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     FacilityViewSet, ChemicalViewSet, InventoryViewSet,
-    TransactionViewSet, UserViewSet, BulkOperationAPIView, EditOperationAPIView, DeleteOperationAPIView
+    TransactionViewSet, UserViewSet, BulkOperationAPIView, EditOperationAPIView, DeleteOperationAPIView, InventoryReportAPIView
 )
 
 # Создаем роутер
@@ -27,6 +27,6 @@ urlpatterns = [
     path('operations/create/bulk/', BulkOperationAPIView.as_view(), name='bulk-operation-create'),
     path('operations/delete/', DeleteOperationAPIView.as_view(), name='delete-operation'),
     path('operations/edit/', EditOperationAPIView.as_view(), name='edit-operation'),
-
+    path('reports/inventory-period/', InventoryReportAPIView.as_view(), name='inventory-report'),
     # Новый URL для создания транзакций
 ]

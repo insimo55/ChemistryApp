@@ -11,6 +11,7 @@ from .serializers import (ChemicalSerializer, FacilitySerializer,
                           InventorySerializer, TransactionSerializer, UserSerializer)
 from .services import recalculate_inventory_for_items
 from .helpers import validate_and_create_operation
+from django.db.models import Sum, Q
 
 
 # Важно! Пока мы не настроили права доступа,
@@ -72,7 +73,49 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 
+class InventoryReportAPIView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request, *args, **kwargs):
+        # 1. Получаем и валидируем параметры
+        facility_id = request.query_params.get('facility_id')
+        chemical_id = request.query_params.get('chemical_id')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if not all([facility_id, chemical_id, start_date, end_date]):
+            raise ValidationError("Необходимо указать facility_id, chemical_id, start_date и end_date.")
+
+        # 2. Расчет начального остатка (все операции ДО start_date)
+        opening_balance_income = Transaction.objects.filter(
+            to_facility_id=facility_id, chemical_id=chemical_id, operation_date__lt=start_date
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+        
+        opening_balance_outcome = Transaction.objects.filter(
+            from_facility_id=facility_id, chemical_id=chemical_id, operation_date__lt=start_date
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+
+        opening_balance = opening_balance_income - opening_balance_outcome
+
+        # 3. Расчет прихода и расхода ЗА ПЕРИОД
+        period_income = Transaction.objects.filter(
+            to_facility_id=facility_id, chemical_id=chemical_id, operation_date__range=[start_date, end_date]
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+
+        period_outcome = Transaction.objects.filter(
+            from_facility_id=facility_id, chemical_id=chemical_id, operation_date__range=[start_date, end_date]
+        ).aggregate(total=Sum('quantity'))['total'] or Decimal(0)
+
+        # 4. Расчет конечного остатка
+        closing_balance = opening_balance + period_income - period_outcome
+        
+        report_data = {
+            'opening_balance': opening_balance,
+            'total_income': period_income,
+            'total_outcome': period_outcome,
+            'closing_balance': closing_balance,
+        }
+        return Response(report_data, status=status.HTTP_200_OK)
 
     
 
