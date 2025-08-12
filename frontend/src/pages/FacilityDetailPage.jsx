@@ -42,8 +42,8 @@ function FacilityDetailPage() {
             // Загружаем и инфо об объекте, и отчет параллельно
             const params = new URLSearchParams({ facility_id: id, start_date: startDate, end_date: endDate });
             const [facilityRes, reportRes] = await Promise.all([
-                apiClient.get(`/api/facilities/${id}/`),
-                apiClient.get(`/api/reports/facility-detail/?${params.toString()}`)
+                apiClient.get(`/facilities/${id}/`),
+                apiClient.get(`/reports/facility-detail/?${params.toString()}`)
             ]);
 
             setFacility(facilityRes.data);
