@@ -1,6 +1,10 @@
 // frontend/src/components/ChemicalHistory.jsx
 import React, { useState, useEffect } from 'react';
 import apiClient from '../api';
+import Modal from './Modal'; // Импортируем Modal для вложенного окна
+import OperationDetail from './OperationDetail'; // Импортируем наш компонент с деталями
+
+
 
 function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     const [history, setHistory] = useState([]);
@@ -8,10 +12,7 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     const [error, setError] = useState('');
 
     // Состояния для отчета
-    const [report, setReport] = useState(null);
-    const [reportLoading, setReportLoading] = useState(false);
-    // const [startDate, setStartDate] = useState('');
-    // const [endDate, setEndDate] = useState('');
+    const [selectedOperationItems, setSelectedOperationItems] = useState(null);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -43,6 +44,23 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
         fetchHistory();
     }, [chemical, facilityId, startDate, endDate]); // Эффект перезапустится, если изменятся chemical или facilityId
 
+
+    // Функция для загрузки ВСЕХ транзакций одной операции по ее UUID
+    const handleRowClick = async (operation_uuid) => {
+        try {
+            const response = await apiClient.get(`/api/transactions/?operation_uuid=${operation_uuid}`);
+            setSelectedOperationItems(response.data.results || response.data);
+        } catch (err) {
+            console.error("Failed to fetch operation details", err);
+        }
+    };
+    
+    // Функция, которую мы передадим в OperationDetail, чтобы он мог обновить наш список
+    const handleActionSuccess = () => {
+        setSelectedOperationItems(null); // Закрываем вложенное окно
+        // Здесь можно было бы перезагрузить историю, но пока просто закроем
+    };
+
     if (loading) return <p className="text-center p-4">Загрузка истории...</p>;
     if (error) return <p className="text-center p-4 text-red-500">{error}</p>;
 
@@ -64,7 +82,12 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
                             const quantityColor = isIncome ? 'text-green-600' : 'text-red-600';
 
                             return (
-                                <div key={tx.id} className="p-3 bg-gray-50 rounded-md border grid grid-cols-3 gap-2 items-center text-sm">
+                                <div 
+                                key={tx.id} 
+                                className="p-3 bg-gray-50 rounded-md border grid grid-cols-3 gap-2 items-center cursor-pointer hover:bg-gray-100"
+                                onClick={() => handleRowClick(tx.operation_uuid)}
+                                title="Нажмите, чтобы посмотреть детали операции"
+                            >
                                     <div className="text-gray-600">
                                         {new Date(tx.operation_date).toLocaleString('ru-RU', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
                                     </div>
@@ -87,6 +110,14 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
                     )}
                 </div>
             </div>
+            <Modal isOpen={!!selectedOperationItems} onClose={() => setSelectedOperationItems(null)}>
+                {selectedOperationItems && (
+                    <OperationDetail 
+                        items={selectedOperationItems} 
+                        onActionSuccess={handleActionSuccess} 
+                    />
+                )}
+            </Modal>
         </div>
     );
 }
