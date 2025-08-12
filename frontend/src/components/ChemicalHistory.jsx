@@ -10,8 +10,8 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     // Состояния для отчета
     const [report, setReport] = useState(null);
     const [reportLoading, setReportLoading] = useState(false);
-    // const [startDate, setStartDate] = useState('');
-    // const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
         const fetchHistory = async () => {
