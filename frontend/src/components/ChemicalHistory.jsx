@@ -48,7 +48,7 @@ function ChemicalHistory({ chemical, facilityId, startDate, endDate }) {
     // Функция для загрузки ВСЕХ транзакций одной операции по ее UUID
     const handleRowClick = async (operation_uuid) => {
         try {
-            const response = await apiClient.get(`/api/transactions/?operation_uuid=${operation_uuid}`);
+            const response = await apiClient.get(`/transactions/?operation_uuid=${operation_uuid}`);
             setSelectedOperationItems(response.data.results || response.data);
         } catch (err) {
             console.error("Failed to fetch operation details", err);
