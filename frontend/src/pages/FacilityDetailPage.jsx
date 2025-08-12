@@ -90,7 +90,17 @@ function FacilityDetailPage() {
       <div className="p-4 border rounded-lg mb-6 bg-white shadow-sm">
           <h3 className="font-semibold mb-2">Общий отчет по объекту за период</h3>
           <div className="flex items-end gap-4 mb-4">
-              {/* ... (поля для startDate, endDate и кнопка "Сформировать", как в ChemicalHistory) ... */}
+              <div>
+                        <label className="text-xs">С даты</label>
+                        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="p-1 border rounded w-full"/>
+                    </div>
+                    <div>
+                        <label className="text-xs">По дату</label>
+                        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="p-1 border rounded w-full"/>
+                    </div>
+                    <button onClick={handleCalculateReport} disabled={reportLoading} className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 disabled:bg-gray-400">
+                        {reportLoading ? '...' : 'Сформировать'}
+                    </button>
           </div>
           {report && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
