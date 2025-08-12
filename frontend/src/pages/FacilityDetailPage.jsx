@@ -36,32 +36,32 @@ function FacilityDetailPage() {
     
     // --- КОНЕЦ БЛОКА СОСТОЯНИЙ ---
 
-  // const fetchData = useCallback(async () => {
-  //   setError('');
-  //   setLoading(true);
-  //   try {
-  //     // Загружаем инфо об объекте и его отфильтрованные остатки
-  //     const [facilityRes, inventoryRes] = await Promise.all([
-  //       apiClient.get(`/facilities/${id}/`),
-  //       apiClient.get(`/inventory/?facility=${id}`) // <-- Этот запрос уже возвращает отфильтрованные данные
-  //     ]);
-  //     setFacility(facilityRes.data);
-  //     const inventoryData = inventoryRes.data.results || inventoryRes.data;
-  //     // Фильтруем массив, оставляя только те элементы, где количество НЕ равно 0
-  //     const filteredInventory = inventoryData.filter(item => parseFloat(item.quantity) !== 0);
-  //     setInventoryForFacility(filteredInventory); // <-- Сохраняем отфильтрованные данные в правильное состояние
-  //   } catch (err) {
-  //     setError('Не удалось загрузить данные. Попробуйте обновить страницу.');
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [id]); // Зависимость от id, чтобы функция перезагружала данные при смене URL
+  const fetchData = useCallback(async () => {
+    setError('');
+    setLoading(true);
+    try {
+      // Загружаем инфо об объекте и его отфильтрованные остатки
+      const [facilityRes, inventoryRes] = await Promise.all([
+        apiClient.get(`/facilities/${id}/`),
+        apiClient.get(`/inventory/?facility=${id}`) // <-- Этот запрос уже возвращает отфильтрованные данные
+      ]);
+      setFacility(facilityRes.data);
+      const inventoryData = inventoryRes.data.results || inventoryRes.data;
+      // Фильтруем массив, оставляя только те элементы, где количество НЕ равно 0
+      const filteredInventory = inventoryData.filter(item => parseFloat(item.quantity) !== 0);
+      setInventoryForFacility(filteredInventory); // <-- Сохраняем отфильтрованные данные в правильное состояние
+    } catch (err) {
+      setError('Не удалось загрузить данные. Попробуйте обновить страницу.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [id]); // Зависимость от id, чтобы функция перезагружала данные при смене URL
 
-  // // Запускаем загрузку данных при первом рендере и при изменении id
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
+  // Запускаем загрузку данных при первом рендере и при изменении id
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // Функция для загрузки отчета
     const fetchReport = useCallback(async () => {
