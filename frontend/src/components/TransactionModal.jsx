@@ -9,7 +9,7 @@ function TransactionModal({ isOpen, onClose, children }) {
     // "Overlay" - затемненный фон
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
       {/* Сам контейнер модального окна */}
-      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative">
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative overflow-y-auto max-h-[50vh]">
         {/* Кнопка закрытия */}
         <button
           onClick={onClose}
