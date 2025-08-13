@@ -56,7 +56,9 @@ function NewOperationPage() {
                 apiClient.get('/chemicals/'),
                 apiClient.get('/facilities/'),
             ]);
-            setChemicals(chemRes.data);
+            const chemicalsData = chemRes.data;
+            chemicalsData.sort((a, b) => a.name.localeCompare(b.name));
+            setChemicals(chemicalsData);
             setFacilities(facRes.data);
         };
         fetchData();
@@ -119,15 +121,18 @@ function NewOperationPage() {
         if (transactionType === 'add' || sourceInventory.length === 0) {
             return chemicals;
         }
-        const inStockChemicalIds = new Set(sourceInventory.map(item => item.chemical.id));
+        const stockMap = new Map(sourceInventory.map(item => [item.chemical.id, parseFloat(item.quantity)]));
         const chemicalsCopy = [...chemicals];
         chemicalsCopy.sort((a, b) => {
-            const aInStock = inStockChemicalIds.has(a.id);
-            const bInStock = inStockChemicalIds.has(b.id);
+            // Проверяем, есть ли реагент в остатках и СТРОГО БОЛЬШЕ ли он нуля
+            const aInStock = (stockMap.get(a.id) || 0) > 0;
+            const bInStock = (stockMap.get(b.id) || 0) > 0;
+
             if (aInStock && !bInStock) return -1;
             if (!aInStock && bInStock) return 1;
-            return 0;
+            return 0; // Алфавитный порядок уже задан
         });
+        
         return chemicalsCopy;
     }, [chemicals, sourceInventory, transactionType]);
 
@@ -312,7 +317,7 @@ function NewOperationPage() {
                     const stock = sourceInventory.find(inv => inv.chemical.id === parseInt(item.chemicalId));
                     const stockQuantity = stock ? stock.quantity : null;
                     const inStockIds = new Set(sourceInventory.map(invItem => invItem.chemical.id));
-
+                    const stockMap = new Map(sourceInventory.map(invItem => [invItem.chemical.id, parseFloat(invItem.quantity)]));  
                     return (
                         <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border">
                             <div className="flex-grow">
@@ -320,11 +325,31 @@ function NewOperationPage() {
                                 <div className="flex items-center space-x-1">
                                     <select required value={item.chemicalId} onChange={e => handleItemChange(index, 'chemicalId', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md">
                                         <option value="">Выберите реагент...</option>
-                                        {sortedChemicals.map(c => (
-                                            <option key={c.id} value={c.id} className={inStockIds.has(c.id) ? 'font-bold text-green-700' : ''}>
-                                                {c.name}
-                                            </option>
-                                        ))}
+                                        {sortedChemicals.map(c => {
+                                const stockQuantity = stockMap.get(c.id);
+                                let optionClassName = '';
+                                // Если остаток определен...
+                                if (stockQuantity !== undefined) {
+                                    // ... и он строго больше нуля, делаем зеленым
+                                    if (stockQuantity > 0) {
+                                        optionClassName = 'font-bold text-green-700';
+                                    } 
+                                    // ... а если меньше нуля, делаем оранжевым/красным
+                                    else if (stockQuantity < 0) {
+                                        optionClassName = 'font-semibold text-orange-600';
+                                    }
+                                }
+                                
+                                return (
+                                    <option 
+                                        key={c.id} 
+                                        value={c.id}
+                                        className={optionClassName}
+                                    >
+                                        {c.name}
+                                    </option>
+                                );
+                            })}
                                     </select>
                                     <button type="button" onClick={openCreateChemicalModal} title="Добавить новый реагент" className="p-2 bg-gray-200 rounded hover:bg-gray-300">+</button>
                                 </div>
