@@ -145,7 +145,7 @@ function FacilityDetailPage() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                        {reportData?.details.map((item) => (
+                        {reportData?.details.slice().sort((a, b) => a.chemical_name.localeCompare(b.chemical_name)).map((item) => (
                             <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
                                 <td className="p-3 whitespace-nowrap">{item.chemical_name} <span className="text-xs text-gray-400">({item.unit})</span></td>
                                 <td className="p-3 whitespace-nowrap text-right font-mono">{item.opening_balance}</td>
