@@ -30,8 +30,8 @@ function Layout() {
       {/* Sidebar */}
       <div className="w-64 bg-gray-800 text-white flex flex-col">
         <div className="px-8 py-4 border-b border-gray-700">
-          
-          <h1 className="text-2xl font-bold">Chem<span className="text-blue-400">Acc</span> <img src="/sample-research.png" alt="header icon"/></h1>
+          <img className='max-w-2' src="/sample-research.png" alt="header icon"/>
+          <h1 className="text-2xl font-bold">Chem<span className="text-blue-400">Acc</span> </h1>
           <p className="text-sm text-gray-400">Система учета реагентов</p>
         </div>
         <nav className="flex-grow p-4">
