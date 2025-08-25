@@ -93,16 +93,16 @@ function RequisitionFormPage() {
             target_facility: targetFacilityId,
             required_date: requiredDate,
             comment,
-            status,
             items: items.filter(item => item.chemical && item.quantity)
                        .map(({ id, ...rest }) => rest) // Убираем временный 'id' перед отправкой
         };
 
         try {
             if (isEditMode) {
-                await apiClient.put(`/requisitions/${id}/`, payload);
+                await apiClient.patch(`/requisitions/${id}/`, payload);
             } else {
-                await apiClient.post('/requisitions/', payload);
+                payload.status = requisition.status;
+                await apiClient.post('/api/requisitions/', payload);
             }
             navigate('/requisitions');
         } catch (err) {
@@ -144,17 +144,15 @@ function RequisitionFormPage() {
                     </div>
                      <div>
                         <label htmlFor="status" className="block text-sm font-medium text-gray-700">Статус</label>
-                        <select id="status" value={status} onChange={e => setStatus(e.target.value)} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md">
-                            <option value="draft">Черновик</option>
-                            <option value="submitted">Подана</option>
-                            <option value="reviewing">На рассмотрении</option>
-                            <option value="approved">Утверждена</option>
-                            <option value="in_progress">В исполнении</option>
-                            <option value="partially_completed">Частично выполнена</option>
-                            <option value="completed">Выполнена</option>
-                            <option value="cancelled">Отменена</option>
-                            <option value="overdue">Просрочена</option>
-                        </select>
+                        <input 
+                            id="status"
+                            type="text"
+                            // Находим "человекочитаемое" имя статуса
+                            value={statusStyles[requisition.status]?.text || 'Неизвестно'}
+                            readOnly
+                            disabled
+                            className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+                        />
                     </div>
                     <div className="md:col-span-2 lg:col-span-3">
                          <label htmlFor="comment" className="block text-sm font-medium text-gray-700">Комментарий</label>
