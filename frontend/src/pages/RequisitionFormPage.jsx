@@ -29,8 +29,8 @@ function RequisitionFormPage() {
     useEffect(() => {
         // Загрузка справочников
         Promise.all([
-            apiClient.get('/api/chemicals/'),
-            apiClient.get('/api/facilities/'),
+            apiClient.get('/chemicals/'),
+            apiClient.get('/facilities/'),
         ]).then(([chemRes, facRes]) => {
             setChemicals(chemRes.data.results || chemRes.data);
             setFacilities(facRes.data.results || facRes.data);
@@ -42,7 +42,7 @@ function RequisitionFormPage() {
         // Если режим редактирования, загружаем данные заявки
         if (isEditMode) {
             setLoading(true);
-            apiClient.get(`/api/requisitions/${id}/`)
+            apiClient.get(`/requisitions/${id}/`)
                 .then(res => {
                     const data = res.data;
                     setRequisition({
@@ -96,9 +96,9 @@ function RequisitionFormPage() {
 
         try {
             if (isEditMode) {
-                await apiClient.patch(`/api/requisitions/${id}/`, payload);
+                await apiClient.patch(`/requisitions/${id}/`, payload);
             } else {
-                await apiClient.post('/api/requisitions/', payload);
+                await apiClient.post('/requisitions/', payload);
             }
             navigate('/requisitions');
         } catch (err) {
