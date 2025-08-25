@@ -44,34 +44,46 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
     // --- РЕНДЕРИМ КНОПКИ В ЗАВИСИМОСТИ ОТ СТАТУСА И РОЛИ ---
 
     const renderButtons = () => {
-        switch (requisition.status) {
+        const { role, id: userId } = user;
+        const { status, created_by } = requisition;
+
+        switch (status) {
             case 'draft':
-                // Автор может отправить черновик
-                if (user.id === requisition.created_by) {
+                if (userId === created_by) {
                     return <ActionButton onClick={() => handleStatusChange('submitted')} text="Отправить на рассмотрение" color="green" />;
                 }
                 return null;
 
             case 'submitted':
+                if (['admin', 'logistician'].includes(role)) {
+                    return <ActionButton onClick={() => handleStatusChange('reviewing')} text="Взять на рассмотрение" color="blue" />;
+                }
+                return null;
+            
             case 'reviewing':
-                // Админ/логист могут утвердить или отклонить
-                if (['admin', 'logistician'].includes(user.role)) {
+                if (['admin', 'logistician'].includes(role)) {
                     return (
                         <div className="flex space-x-2">
                             <ActionButton onClick={() => handleStatusChange('approved')} text="Утвердить" color="green" />
+                            <ActionButton onClick={() => handleStatusChange('needs_revision')} text="Отправить на доработку" color="gray" />
                             <ActionButton onClick={() => handleStatusChange('cancelled')} text="Отклонить" color="red" />
                         </div>
                     );
                 }
                 return null;
-            
+
+            case 'needs_revision':
+                if (userId === created_by) {
+                    return <ActionButton onClick={() => handleStatusChange('submitted')} text="Повторно отправить" color="green" />;
+                }
+                return null;
+
             case 'approved':
-                // Админ/логист могут взять в работу или отменить
-                if (['admin', 'logistician'].includes(user.role)) {
+                if (['admin', 'logistician'].includes(role)) {
                     return (
-                         <div className="flex space-x-2">
+                        <div className="flex space-x-2">
                             <ActionButton onClick={() => handleStatusChange('in_progress')} text="Взять в исполнение" color="blue" />
-                            <ActionButton onClick={() => handleStatusChange('cancelled')} text="Отменить" color="red" />
+                            <ActionButton onClick={() => handleStatusChange('submitted')} text="Отменить утверждение" color="gray" />
                         </div>
                     );
                 }
@@ -79,23 +91,16 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
 
             case 'in_progress':
             case 'partially_completed':
-                 // Админ/логист могут завершить или вернуть
-                 if (['admin', 'logistician'].includes(user.role)) {
-                    return (
-                         <div className="flex space-x-2">
-                            <ActionButton onClick={() => handleStatusChange('completed')} text="Завершить выполнение" color="green" />
-                            <ActionButton onClick={() => handleStatusChange('approved')} text="Вернуть на утверждение" color="gray" />
-                        </div>
-                    );
+                 if (['admin', 'logistician'].includes(role)) {
+                    return <ActionButton onClick={() => handleStatusChange('completed')} text="Завершить выполнение" color="green" />;
                 }
                 return null;
 
             case 'completed':
             case 'cancelled':
             case 'overdue':
-                // Админ может вернуть в работу закрытую или отмененную заявку
-                if (user.role === 'admin') {
-                    return <ActionButton onClick={() => handleStatusChange('in_progress')} text="Вернуть в работу" color="gray" />;
+                if (role === 'admin') {
+                    return <ActionButton onClick={() => handleStatusChange('draft')} text="Открыть заново (в черновик)" color="gray" />;
                 }
                 return null;
 
