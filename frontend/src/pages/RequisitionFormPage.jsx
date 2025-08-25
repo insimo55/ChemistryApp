@@ -18,7 +18,7 @@ function RequisitionFormPage() {
         comment: '',
         items: [{ id: Date.now(), chemical: '', quantity: '', notes: '' }]
     });
-    
+    const isEditable = ['draft', 'needs_revision'].includes(requisition.status);
     // Справочники и UI
     const [facilities, setFacilities] = useState([]);
     const [chemicals, setChemicals] = useState([]);
@@ -121,57 +121,62 @@ function RequisitionFormPage() {
             </div>
             <h1 className="text-3xl font-bold mb-6">{isEditMode ? `Редактирование заявки №${id}` : 'Новая заявка'}</h1>
             <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+                {error && <p className="bg-red-100 p-3 rounded mb-4 text-sm">{error}</p>}
+                
+                {/* --- СЕКЦИЯ "ШАПКА" --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 pb-6 border-b">
                     <div>
-                        <label htmlFor="target_facility" className="block text-sm font-medium">Объект назначения</label>
-                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required className="mt-1 block w-full p-2 border rounded">
+                        <label htmlFor="target_facility" className="block text-sm font-medium text-gray-700">Объект назначения</label>
+                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed">
                             <option value="">Выберите объект...</option>
                             {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="required_date" className="block text-sm font-medium">Желаемая дата поставки</label>
-                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required className="mt-1 block w-full p-2 border rounded"/>
+                        <label htmlFor="required_date" className="block text-sm font-medium text-gray-700">Желаемая дата поставки</label>
+                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
                     </div>
-                    <div>
-                        <label htmlFor="status" className="block text-sm font-medium">Статус</label>
+                     <div>
+                        <label htmlFor="status" className="block text-sm font-medium text-gray-700">Статус</label>
                         <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100"/>
                     </div>
                     <div className="md:col-span-2 lg:col-span-3">
-                         <label htmlFor="comment" className="block text-sm font-medium">Комментарий</label>
-                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" className="mt-1 block w-full p-2 border rounded"></textarea>
+                         <label htmlFor="comment" className="block text-sm font-medium text-gray-700">Комментарий</label>
+                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"></textarea>
                     </div>
                 </div>
 
+                {/* --- СЕКЦИЯ "ПОЗИЦИИ" --- */}
                 <h3 className="text-lg font-semibold mb-4">Позиции заявки</h3>
                 <div className="space-y-4">
                     {requisition.items.map((item, index) => (
                         <div key={item.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border p-3 rounded-md">
                             <div className="md:col-span-1">
                                 <label className="block text-xs font-medium">Реагент</label>
-                                <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="mt-1 block w-full p-2 border rounded">
-                                    <option value="">Выберите реагент...</option>
+                                <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed">
+                                    <option value="">Выберите...</option>
                                     {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
                             </div>
                             <div>
                                 <label className="block text-xs font-medium">Требуемое количество</label>
-                                <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="mt-1 block w-full p-2 border rounded"/>
+                                <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
                             </div>
                             <div className="flex items-center space-x-2">
                                <div className="flex-grow">
                                     <label className="block text-xs font-medium">Примечание</label>
-                                    <input type="text" value={item.notes} onChange={e => handleItemChange(index, 'notes', e.target.value)} className="mt-1 block w-full p-2 border rounded"/>
+                                    <input type="text" value={item.notes} onChange={e => handleItemChange(index, 'notes', e.target.value)} disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
                                </div>
-                               {requisition.items.length > 1 && (
+                               {isEditable && requisition.items.length > 1 && (
                                    <button type="button" onClick={() => removeItem(index)} title="Удалить позицию" className="p-2 text-red-500 hover:text-red-700">&times;</button>
                                )}
                             </div>
                         </div>
                     ))}
                 </div>
-                <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline">+ Добавить позицию</button>
+                {isEditable && <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline">+ Добавить позицию</button>}
 
+                {/* --- БЛОК КНОПОК --- */}
                 <div className="mt-8 pt-4 border-t flex justify-between items-center">
                     <div>
                         {isEditMode && (
@@ -181,9 +186,12 @@ function RequisitionFormPage() {
                             />
                         )}
                     </div>
-                    <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 disabled:bg-gray-400">
-                        {loading ? 'Сохранение...' : (isEditMode ? 'Сохранить изменения' : 'Создать заявку')}
-                    </button>
+                    {/* Кнопка "Сохранить" видна, только если можно редактировать */}
+                    {isEditable && (
+                        <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
+                            {loading ? 'Сохранение...' : (isEditMode ? 'Сохранить изменения' : 'Создать заявку')}
+                        </button>
+                    )}
                 </div>
             </form>
         </div>
