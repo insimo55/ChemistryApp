@@ -65,6 +65,22 @@ function RequisitionFormPage() {
         newItems[index][field] = value;
         setRequisition(prev => ({ ...prev, items: newItems }));
     };
+    const handleDelete = async () => {
+        // Запрашиваем подтверждение у пользователя
+        if (window.confirm(`Вы уверены, что хотите безвозвратно удалить заявку №${id}?`)) {
+            try {
+                setLoading(true);
+                // Отправляем DELETE-запрос на нужный эндпоинт
+                await apiClient.delete(`/api/requisitions/${id}/`);
+                alert('Заявка успешно удалена.');
+                navigate('/requisitions'); // Возвращаемся в реестр
+            } catch (error) {
+                setError('Не удалось удалить заявку.');
+                console.error("Delete requisition failed:", error);
+                setLoading(false);
+            }
+        }
+    };
     const addItem = () => {
         const newItems = [...requisition.items, { id: Date.now(), chemical: '', quantity: '', notes: '' }];
         setRequisition(prev => ({ ...prev, items: newItems }));
@@ -186,7 +202,17 @@ function RequisitionFormPage() {
                             />
                         )}
                     </div>
-                    {/* Кнопка "Сохранить" видна, только если можно редактировать */}
+                    {/* Кнопка "Сохрнить" видна, только если можно редактировать */}
+                    {isEditMode && (
+                            <button 
+                                type="button" 
+                                onClick={handleDelete}
+                                disabled={loading}
+                                className="text-red-600 hover:text-red-700 hover:underline px-4 py-2"
+                            >
+                                Удалить
+                            </button>
+                    )}
                     {isEditable && (
                         <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
                             {loading ? 'Сохранение...' : (isEditMode ? 'Сохранить изменения' : 'Создать заявку')}
