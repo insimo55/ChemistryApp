@@ -71,7 +71,7 @@ function RequisitionFormPage() {
             try {
                 setLoading(true);
                 // Отправляем DELETE-запрос на нужный эндпоинт
-                await apiClient.delete(`/api/requisitions/${id}/`);
+                await apiClient.delete(`/requisitions/${id}/`);
                 alert('Заявка успешно удалена.');
                 navigate('/requisitions'); // Возвращаемся в реестр
             } catch (error) {
