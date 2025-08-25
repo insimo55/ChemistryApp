@@ -26,7 +26,7 @@ function RequisitionsPage() {
         const fetchRequisitions = async () => {
             try {
                 setLoading(true);
-                const response = await apiClient.get('/api/requisitions/');
+                const response = await apiClient.get('/requisitions/');
                 setRequisitions(response.data.results || response.data);
             } catch (error) {
                 console.error("Failed to fetch requisitions:", error);

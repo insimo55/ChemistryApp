@@ -1,6 +1,6 @@
 // frontend/src/pages/RequisitionFormPage.jsx
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,Link } from 'react-router-dom';
 import apiClient from '../api';
 import RequisitionActionButtons from '../components/RequisitionActionButtons'; 
 
@@ -32,15 +32,15 @@ function RequisitionFormPage() {
             try {
                 // Всегда загружаем справочники
                 const [chemRes, facRes] = await Promise.all([
-                    apiClient.get('/api/chemicals/'),
-                    apiClient.get('/api/facilities/'),
+                    apiClient.get('/chemicals/'),
+                    apiClient.get('/facilities/'),
                 ]);
                 setChemicals(chemRes.data.results || chemRes.data);
                 setFacilities(facRes.data.results || facRes.data);
 
                 // Если это режим редактирования, загружаем данные самой заявки
                 if (isEditMode) {
-                    apiClient.get(`/api/requisitions/${id}/`).then(res => {
+                    apiClient.get(`/requisitions/${id}/`).then(res => {
                         const data = res.data;
                         setRequisitionData(data); // <-- Сохраняем всю заявку
                         
@@ -100,9 +100,9 @@ function RequisitionFormPage() {
 
         try {
             if (isEditMode) {
-                await apiClient.put(`/api/requisitions/${id}/`, payload);
+                await apiClient.put(`/requisitions/${id}/`, payload);
             } else {
-                await apiClient.post('/api/requisitions/', payload);
+                await apiClient.post('/requisitions/', payload);
             }
             navigate('/requisitions');
         } catch (err) {

@@ -33,7 +33,7 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
             return;
         }
         try {
-            const response = await apiClient.patch(`/api/requisitions/${requisition.id}/`, { status: newStatus });
+            const response = await apiClient.patch(`/requisitions/${requisition.id}/`, { status: newStatus });
             onStatusChange(response.data); // Передаем обновленную заявку родителю
         } catch (error) {
             console.error("Failed to update status:", error);
