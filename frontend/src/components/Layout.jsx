@@ -42,6 +42,7 @@ function Layout() {
           <SidebarLink to="/">Главная (Объекты)</SidebarLink>
           <SidebarLink to="/transactions">История операций</SidebarLink>
           <SidebarLink to="/new-operation">Провести операцию</SidebarLink>
+          <SidebarLink to="/requisitions">Заявки</SidebarLink>
            {/* Ролевые ссылки */}
           {(user?.role === 'admin' || user?.role === 'logistician') && (
             <>

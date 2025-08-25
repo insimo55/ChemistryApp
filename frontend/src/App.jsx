@@ -16,6 +16,8 @@ import ChemicalsPage from './pages/ChemicalsPage';
 import FacilitiesAdminPage from './pages/FacilitiesAdminPage'; // Предполагаем, что вы создали этот файл
 import UsersPage from './pages/UsersPage';
 import NewOperationPage from './pages/NewOperationPage';
+import RequisitionsPage from './pages/RequisitionsPage';
+import RequisitionFormPage from './pages/RequisitionFormPage'; 
 
 // Заглушка для страницы управления пользователями (пока не создали)
 
@@ -75,6 +77,10 @@ function App() {
           
           {/* Страница с историей всех транзакций */}
           <Route path="transactions" element={<TransactionsPage />} />
+          {/* Страница с регистром заявок */}
+          <Route path="requisitions" element={<RequisitionsPage />} />
+          <Route path="requisitions/new" element={<RequisitionFormPage />} /> {/* <-- ДЛЯ СОЗДАНИЯ */}
+          <Route path="requisitions/:id" element={<RequisitionFormPage />} /> {/* <-- ДЛЯ РЕДАКТИРОВАНИЯ */}
           {/* Роуты для админов и логистов. Можно обернуть их в общий защитный роут, если нужно. */}
           <Route path="chemicals" element={<ChemicalsPage />} />
           <Route path="facilities-admin" element={<FacilitiesAdminPage />} />
