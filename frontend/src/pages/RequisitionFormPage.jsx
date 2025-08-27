@@ -6,12 +6,13 @@ import { statusStyles } from '../utils/styleHelpers';
 import RequisitionActionButtons from '../components/RequisitionActionButtons';
 import Modal from '../components/Modal';
 import ReceiveItemModal from '../components/ReceiveItemModal';
+import { useAuthStore } from '../store/auth';
 
 function RequisitionFormPage() {
     const { id } = useParams();
     const isEditMode = !!id;
     const navigate = useNavigate();
-
+    const { user } = useAuthStore();
     // Единое состояние для всей заявки
     const [requisition, setRequisition] = useState({
         status: 'draft',
