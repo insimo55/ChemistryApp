@@ -140,7 +140,7 @@ function RequisitionFormPage() {
             }))
     };
     if (isEditMode) delete payload.status; // Не отправляем статус при редактировании
-
+    console.log("ОТПРАВЛЯЕМ НА БЭКЕНД:", JSON.stringify(payload, null, 2));
     try {
         if (isEditMode) {
             await apiClient.patch(`/requisitions/${id}/`, payload);
