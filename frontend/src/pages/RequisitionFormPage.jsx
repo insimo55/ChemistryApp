@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api';
 import { statusStyles } from '../utils/styleHelpers';
 import RequisitionActionButtons from '../components/RequisitionActionButtons';
+import Modal from '../components/Modal';
 import ReceiveItemModal from '../components/ReceiveItemModal';
 
 function RequisitionFormPage() {
