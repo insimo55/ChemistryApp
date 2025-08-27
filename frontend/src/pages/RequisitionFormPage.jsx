@@ -244,7 +244,7 @@ function RequisitionFormPage() {
                                                     <button type="button" onClick={() => setReceivingItem(item)} className="bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600">Принять</button>
                                                 )
                                             )}
-                                             {item.received_quantity > 0 && !isEditable && (
+                                            {item.received_quantity > 0 && !isEditable && ['in_progress', 'partially_completed'].includes(requisition.status) && (
                                                 <button 
                                                     type="button" 
                                                     onClick={() => handleRevertItem(item.id)}
@@ -271,7 +271,7 @@ function RequisitionFormPage() {
                     </div>
                     {isEditable && (
                         <div className="flex items-center space-x-3">
-                            {isEditMode && !['completed', 'cancelled'].includes(requisition.status) && (
+                            
                     <button 
                         type="button" 
                         onClick={handleDelete}
@@ -280,7 +280,7 @@ function RequisitionFormPage() {
                     >
                         Удалить
                     </button>
-                )}
+                
                             <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
                                 {loading ? 'Сохранение...' : 'Сохранить изменения'}
                             </button>

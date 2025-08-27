@@ -4,7 +4,7 @@ import apiClient from '../api';
 import { useAuthStore } from '../store/auth';
 
 // --- Компонент для одной кнопки, чтобы не повторять стили ---
-const ActionButton = ({ onClick, text, color = 'blue' }) => {
+const ActionButton = ({ onClick, text, color = 'blue', disabled = false, title = ''  }) => {
     const colorClasses = {
         blue: 'bg-blue-500 hover:bg-blue-600',
         green: 'bg-green-500 hover:bg-green-600',
@@ -14,7 +14,9 @@ const ActionButton = ({ onClick, text, color = 'blue' }) => {
     return (
         <button
             onClick={onClick}
-            className={`text-white font-bold py-2 px-4 rounded shadow-sm transition-colors duration-200 ${colorClasses[color]}`}
+            disabled={disabled}
+            title={title}
+            className={`... ${disabled ? 'bg-gray-400 cursor-not-allowed' : colorClasses[color]}`}
         >
             {text}
         </button>
@@ -95,15 +97,30 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
 
             case 'in_progress':
             case 'partially_completed':
-                const allItemsCompleted = requisition.items.every(item => item.received_quantity >= item.quantity);
+                if (['admin', 'logistician'].includes(user.role)) {
+                    // --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+                    // Проверяем, все ли позиции в заявке выполнены
+                    const allItemsCompleted = requisition.items.every(
+                        item => parseFloat(item.received_quantity) >= parseFloat(item.quantity)
+                    );
 
-                 if (['admin', 'logistician'].includes(role)) {
-                    return <ActionButton 
-                onClick={() => handleStatusChange('completed')} 
-                text="Завершить выполнение" 
-                color="green"
-                disabled={!allItemsCompleted} // <-- Добавляем disabled
-            />;
+                    return (
+                         <div className="flex space-x-2">
+                            <ActionButton 
+                                onClick={() => handleStatusChange('completed')} 
+                                text="Завершить выполнение" 
+                                color="green"
+                                // Кнопка будет неактивна, если не все позиции выполнены
+                                disabled={!allItemsCompleted} 
+                                title={!allItemsCompleted ? 'Сначала нужно принять все позиции' : ''}
+                            />
+                            <ActionButton 
+                                onClick={() => handleStatusChange('approved')} 
+                                text="Вернуть на утверждение" 
+                                color="gray" 
+                            />
+                        </div>
+                    );
                 }
                 return null;
 
