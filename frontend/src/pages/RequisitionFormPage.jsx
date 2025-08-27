@@ -225,6 +225,16 @@ function RequisitionFormPage() {
                                                     <button type="button" onClick={() => setReceivingItem(item)} className="bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600">Принять</button>
                                                 )
                                             )}
+                                             {item.received_quantity > 0 && !isEditable && (
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => handleRevertItem(item.id)}
+                                                    className="text-gray-500 hover:text-red-600 text-xs ml-2"
+                                                    title="Отменить все приемки по этой позиции"
+                                                >
+                                                    (откатить)
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 )
