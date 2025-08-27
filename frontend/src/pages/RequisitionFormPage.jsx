@@ -143,9 +143,9 @@ function RequisitionFormPage() {
 
     try {
         if (isEditMode) {
-            await apiClient.patch(`/api/requisitions/${id}/`, payload);
+            await apiClient.patch(`/requisitions/${id}/`, payload);
         } else {
-            await apiClient.post('/api/requisitions/', payload);
+            await apiClient.post('/requisitions/', payload);
         }
         navigate('/requisitions');
     } catch (err) {
