@@ -4,11 +4,15 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api';
 import { statusStyles } from '../utils/styleHelpers';
 import RequisitionActionButtons from '../components/RequisitionActionButtons';
+import ReceiveItemModal from '../components/ReceiveItemModal';
 
 function RequisitionFormPage() {
     const { id } = useParams();
     const isEditMode = !!id;
     const navigate = useNavigate();
+
+     // Состояние для модального окна приемки
+    const [receivingItem, setReceivingItem] = useState(null);
 
     // --- ЕДИНОЕ СОСТОЯНИЕ ДЛЯ ВСЕЙ ЗАЯВКИ ---
     const [requisition, setRequisition] = useState({
@@ -162,64 +166,83 @@ function RequisitionFormPage() {
                     </div>
                 </div>
 
-                {/* --- СЕКЦИЯ "ПОЗИЦИИ" --- */}
+                 {/* --- Секция "Позиции" (здесь основные изменения) --- */}
                 <h3 className="text-lg font-semibold mb-4">Позиции заявки</h3>
-                <div className="space-y-4">
-                    {requisition.items.map((item, index) => (
-                        <div key={item.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border p-3 rounded-md">
-                            <div className="md:col-span-1">
-                                <label className="block text-xs font-medium">Реагент</label>
-                                <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed">
-                                    <option value="">Выберите...</option>
-                                    {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-xs font-medium">Требуемое количество</label>
-                                <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                               <div className="flex-grow">
-                                    <label className="block text-xs font-medium">Примечание</label>
-                                    <input type="text" value={item.notes} onChange={e => handleItemChange(index, 'notes', e.target.value)} disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
-                               </div>
-                               {isEditable && requisition.items.length > 1 && (
-                                   <button type="button" onClick={() => removeItem(index)} title="Удалить позицию" className="p-2 text-red-500 hover:text-red-700">&times;</button>
-                               )}
-                            </div>
-                        </div>
-                    ))}
+                <div className="bg-white rounded-lg overflow-x-auto">
+                    <table className="min-w-full">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Реагент</th>
+                                <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase">Заказано</th>
+                                <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase">Получено</th>
+                                <th className="p-3 text-center text-xs font-semibold text-gray-600 uppercase">Статус</th>
+                                {isEditable ? <th className="p-3"></th> : (
+                                    <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase">Действие</th>
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {requisition.items.map((item, index) => {
+                                const remainingQty = item.quantity - item.received_quantity;
+                                const isCompleted = remainingQty <= 0;
+
+                                return (
+                                    <tr key={item.id}>
+                                        <td className="p-2">{isEditable ? (
+                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded">
+                                                <option value="">Выберите...</option>
+                                                {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                            </select>
+                                        ) : (
+                                            item.chemical_name || 'Загрузка...'
+                                        )}</td>
+                                        <td className="p-2 text-right">{isEditable ? (
+                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right"/>
+                                        ) : item.quantity}</td>
+                                        <td className="p-2 text-right font-medium">{item.received_quantity}</td>
+                                        <td className="p-2 text-center">
+                                            {isCompleted 
+                                                ? <span className="text-green-600 font-semibold">✅&nbsp;Выполнено</span>
+                                                : <span className="text-yellow-600">⏳&nbsp;В&nbsp;ожидании</span>
+                                            }
+                                        </td>
+                                        <td className="p-2 text-right">
+                                            {isEditable ? (
+                                                items.length > 1 && <button type="button" onClick={() => removeItem(index)} title="Удалить позицию">&times;</button>
+                                            ) : (
+                                                ['in_progress', 'partially_completed'].includes(requisition.status) && !isCompleted && (
+                                                    <button type="button" onClick={() => setReceivingItem(item)} className="bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600">Принять</button>
+                                                )
+                                            )}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
                 </div>
+
                 {isEditable && <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline">+ Добавить позицию</button>}
 
                 {/* --- БЛОК КНОПОК --- */}
                 <div className="mt-8 pt-4 border-t flex justify-between items-center">
                     <div>
-                        {isEditMode && (
-                            <RequisitionActionButtons 
-                                requisition={requisition}
-                                onStatusChange={handleStatusUpdate}
-                            />
-                        )}
+                        {isEditMode && <RequisitionActionButtons requisition={requisition} onStatusChange={handleStatusUpdate}/>}
                     </div>
-                    {/* Кнопка "Сохрнить" видна, только если можно редактировать */}
-                    {isEditMode && (
-                            <button 
-                                type="button" 
-                                onClick={handleDelete}
-                                disabled={loading}
-                                className="text-red-600 hover:text-red-700 hover:underline px-4 py-2"
-                            >
-                                Удалить
-                            </button>
-                    )}
                     {isEditable && (
-                        <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
-                            {loading ? 'Сохранение...' : (isEditMode ? 'Сохранить изменения' : 'Создать заявку')}
-                        </button>
+                        <div className="flex items-center space-x-3">
+                            <button type="button" onClick={handleDelete} disabled={loading} className="text-red-600 hover:underline px-4 py-2">Удалить</button>
+                            <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
+                                {loading ? 'Сохранение...' : 'Сохранить изменения'}
+                            </button>
+                        </div>
                     )}
                 </div>
             </form>
+            {/* Модальное окно для приемки */}
+            <Modal isOpen={!!receivingItem} onClose={() => setReceivingItem(null)}>
+                {receivingItem && <ReceiveItemModal item={receivingItem} onClose={() => setReceivingItem(null)} onReceiveSuccess={() => { setReceivingItem(null); fetchData(); }} />}
+            </Modal>
         </div>
     );
 }
