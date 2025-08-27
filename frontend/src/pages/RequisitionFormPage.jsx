@@ -80,7 +80,6 @@ function RequisitionFormPage() {
         setRequisition(prev => ({ ...prev, items: newItems }));
     };
     const removeItem = (index) => {
-        // Используем requisition.items
         const newItems = requisition.items.filter((_, i) => i !== index);
         setRequisition(prev => ({ ...prev, items: newItems }));
     };
@@ -119,7 +118,11 @@ function RequisitionFormPage() {
             ...( !isEditMode && { status: requisition.status }),
             items: requisition.items
                 .filter(item => item.chemical && item.quantity)
-                .map(({ id, chemical_name, ...rest }) => rest)
+                .map(item => ({
+                    chemical: item.chemical,
+                    quantity: item.quantity,
+                    notes: item.notes
+                }))
         };
 
         try {
@@ -216,7 +219,7 @@ function RequisitionFormPage() {
                                         </td>
                                         <td className="p-2 text-right">
                                             {isEditable ? (
-                                                items.length > 1 && <button type="button" onClick={() => removeItem(index)} title="Удалить позицию">&times;</button>
+                                                requisition.items.length > 1 && <button type="button" onClick={() => removeItem(index)} title="Удалить позицию">&times;</button>
                                             ) : (
                                                 ['in_progress', 'partially_completed'].includes(requisition.status) && !isCompleted && (
                                                     <button type="button" onClick={() => setReceivingItem(item)} className="bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600">Принять</button>
