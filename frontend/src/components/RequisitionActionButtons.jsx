@@ -91,8 +91,15 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
 
             case 'in_progress':
             case 'partially_completed':
+                const allItemsCompleted = requisition.items.every(item => item.received_quantity >= item.quantity);
+
                  if (['admin', 'logistician'].includes(role)) {
-                    return <ActionButton onClick={() => handleStatusChange('completed')} text="Завершить выполнение" color="green" />;
+                    return <ActionButton 
+                onClick={() => handleStatusChange('completed')} 
+                text="Завершить выполнение" 
+                color="green"
+                disabled={!allItemsCompleted} // <-- Добавляем disabled
+            />;
                 }
                 return null;
 

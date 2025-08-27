@@ -242,7 +242,16 @@ function RequisitionFormPage() {
                     </div>
                     {isEditable && (
                         <div className="flex items-center space-x-3">
-                            <button type="button" onClick={handleDelete} disabled={loading} className="text-red-600 hover:underline px-4 py-2">Удалить</button>
+                            {isEditMode && !['completed', 'cancelled'].includes(requisition.status) && (
+                    <button 
+                        type="button" 
+                        onClick={handleDelete}
+                        disabled={loading}
+                        className="text-red-600 hover:underline px-4 py-2"
+                    >
+                        Удалить
+                    </button>
+                )}
                             <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
                                 {loading ? 'Сохранение...' : 'Сохранить изменения'}
                             </button>
