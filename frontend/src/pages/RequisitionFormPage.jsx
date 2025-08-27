@@ -102,6 +102,18 @@ function RequisitionFormPage() {
             }
         }
     };
+
+    const handleRevertItem = async (itemId) => {
+    if (window.confirm("Вы уверены, что хотите отменить ВСЕ приемки по этой позиции? Связанные поступления на склад будут удалены.")) {
+        try {
+            const response = await apiClient.post('/requisitions/revert-item/', { item_id: itemId });
+            // Бэкенд возвращает обновленную заявку целиком, обновляем состояние
+            setRequisition(response.data);
+        } catch (error) {
+            setError("Ошибка отмены приемки.");
+        }
+    }
+};
     
 
     // Отправка формы
