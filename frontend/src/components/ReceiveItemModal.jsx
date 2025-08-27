@@ -10,7 +10,7 @@ function ReceiveItemModal({ item, onClose, onReceiveSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await apiClient.post('/api/requisitions/receive-item/', {
+            await apiClient.post('/requisitions/receive-item/', {
                 item_id: item.id,
                 quantity: quantity,
                 operation_date: operationDate,
