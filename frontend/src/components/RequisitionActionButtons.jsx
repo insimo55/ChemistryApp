@@ -26,7 +26,10 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
     const { user } = useAuthStore();
      // --- ДОБАВЬТЕ ЭТОТ ЛОГ ---
     console.log("ActionButtons: Получены пропсы", { requisition, user });
-    if (!requisition || !user) return null;
+    if (!requisition || !user){
+         console.log("ActionButtons: Рендер отменен, так как requisition или user отсутствуют.");
+     return null;
+    }
 
     const handleStatusChange = async (newStatus, confirmationText) => {
         const confirmationMessage = confirmationText || `Вы уверены, что хотите изменить статус на "${newStatus}"?`;
