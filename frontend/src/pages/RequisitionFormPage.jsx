@@ -125,6 +125,9 @@ function RequisitionFormPage() {
     setLoading(true);
     setError('');
 
+    // --- ДОБАВЬТЕ ЭТОТ ЛОГ ---
+    console.log("СОСТОЯНИЕ ПЕРЕД ФИЛЬТРАЦИЕЙ (requisition.items):", requisition.items);
+
     const payload = {
         target_facility: requisition.target_facility,
         required_date: requisition.required_date,
@@ -132,9 +135,8 @@ function RequisitionFormPage() {
         status: requisition.status,
         items: requisition.items
             .filter(item => item.chemical && item.quantity)
-            // `chemical` у нас уже хранит ID, так что просто убираем лишние поля
             .map(item => ({
-                chemical: item.chemical, // Отправляем ID в поле `chemical`
+                chemical: item.chemical,
                 quantity: item.quantity,
                 notes: item.notes || ''
             }))
