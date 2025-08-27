@@ -12,10 +12,7 @@ function RequisitionFormPage() {
     const isEditMode = !!id;
     const navigate = useNavigate();
 
-     // Состояние для модального окна приемки
-    const [receivingItem, setReceivingItem] = useState(null);
-
-    // --- ЕДИНОЕ СОСТОЯНИЕ ДЛЯ ВСЕЙ ЗАЯВКИ ---
+    // Единое состояние для всей заявки
     const [requisition, setRequisition] = useState({
         status: 'draft',
         target_facility: '',
@@ -23,43 +20,51 @@ function RequisitionFormPage() {
         comment: '',
         items: [{ id: Date.now(), chemical: '', quantity: '', notes: '' }]
     });
-    const isEditable = ['draft', 'needs_revision'].includes(requisition.status);
+    
     // Справочники и UI
     const [facilities, setFacilities] = useState([]);
     const [chemicals, setChemicals] = useState([]);
     const [loading, setLoading] = useState(isEditMode);
     const [error, setError] = useState('');
+    const [receivingItem, setReceivingItem] = useState(null);
 
-    // Загрузка данных
+    // Определяем, можно ли редактировать форму
+    const isEditable = ['draft', 'needs_revision'].includes(requisition.status);
+
+    // Функция для перезагрузки данных (например, после приемки)
+    const fetchData = useCallback(() => {
+        if (!isEditMode) return;
+        setLoading(true);
+        apiClient.get(`/requisitions/${id}/`)
+            .then(res => {
+                const data = res.data;
+                setRequisition({
+                    ...data,
+                    items: data.items.map(item => ({...item, id: item.id || Date.now()}))
+                });
+            })
+            .catch(err => setError('Не удалось обновить данные заявки.'))
+            .finally(() => setLoading(false));
+    }, [id, isEditMode]);
+
+    // Загрузка первоначальных данных
     useEffect(() => {
-        // Загрузка справочников
         Promise.all([
             apiClient.get('/chemicals/'),
             apiClient.get('/facilities/'),
         ]).then(([chemRes, facRes]) => {
             setChemicals(chemRes.data.results || chemRes.data);
             setFacilities(facRes.data.results || facRes.data);
-        }).catch(err => {
-            setError('Не удалось загрузить справочники.');
-            console.error(err);
         });
 
-        // Если режим редактирования, загружаем данные заявки
         if (isEditMode) {
-            setLoading(true);
-            apiClient.get(`/requisitions/${id}/`)
-                .then(res => {
-                    const data = res.data;
-                    setRequisition({
-                        ...data,
-                        items: data.items.map(item => ({...item, id: item.id || Date.now()}))
-                    });
-                })
-                .catch(err => setError('Не удалось загрузить данные заявки.'))
-                .finally(() => setLoading(false));
+            fetchData();
+        } else {
+            setLoading(false);
         }
-    }, [id, isEditMode]);
+    }, [id, isEditMode, fetchData]);
 
+    
     // --- Обработчики, работающие с единым состоянием ---
     const handleHeaderChange = (e) => {
         const { name, value } = e.target;
@@ -69,6 +74,18 @@ function RequisitionFormPage() {
         const newItems = [...requisition.items];
         newItems[index][field] = value;
         setRequisition(prev => ({ ...prev, items: newItems }));
+    };
+    const addItem = () => {
+        const newItems = [...requisition.items, { id: Date.now(), chemical: '', quantity: '', notes: '' }];
+        setRequisition(prev => ({ ...prev, items: newItems }));
+    };
+    const removeItem = (index) => {
+        // Используем requisition.items
+        const newItems = requisition.items.filter((_, i) => i !== index);
+        setRequisition(prev => ({ ...prev, items: newItems }));
+    };
+    const handleStatusUpdate = (updatedRequisition) => {
+        setRequisition(updatedRequisition);
     };
     const handleDelete = async () => {
         // Запрашиваем подтверждение у пользователя
@@ -86,17 +103,7 @@ function RequisitionFormPage() {
             }
         }
     };
-    const addItem = () => {
-        const newItems = [...requisition.items, { id: Date.now(), chemical: '', quantity: '', notes: '' }];
-        setRequisition(prev => ({ ...prev, items: newItems }));
-    };
-    const removeItem = (index) => {
-        const newItems = requisition.items.filter((_, i) => i !== index);
-        setRequisition(prev => ({ ...prev, items: newItems }));
-    };
-    const handleStatusUpdate = (updatedRequisition) => {
-        setRequisition(updatedRequisition);
-    };
+    
 
     // Отправка формы
     const handleSubmit = async (e) => {
