@@ -24,7 +24,8 @@ const ActionButton = ({ onClick, text, color = 'blue' }) => {
 
 function RequisitionActionButtons({ requisition, onStatusChange }) {
     const { user } = useAuthStore();
-
+     // --- ДОБАВЬТЕ ЭТОТ ЛОГ ---
+    console.log("ActionButtons: Получены пропсы", { requisition, user });
     if (!requisition || !user) return null;
 
     const handleStatusChange = async (newStatus, confirmationText) => {
