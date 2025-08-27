@@ -38,11 +38,11 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
             <div className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Название</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm"/>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Единица измерения</label>
-                    <select value={unit} onChange={e => setUnit(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm">
+                    <select value={unit} onChange={e => setUnit(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm">
                         <option>кг</option>
                         <option>л</option>
                         <option>шт</option>
@@ -51,7 +51,7 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Описание</label>
-                    <textarea value={desc} onChange={e => setDesc(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm"></textarea>
+                    <textarea value={desc} onChange={e => setDesc(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm"></textarea>
                 </div>
             </div>
             <div className="mt-6 flex justify-end space-x-3">
