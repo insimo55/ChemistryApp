@@ -72,9 +72,6 @@ function RequisitionFormPage() {
     };
     const handleItemChange = (index, field, value) => {
         const newItems = [...requisition.items];
-        if (field === 'chemical') {
-            newItems[index]['chemical_id'] = value;
-        }
         newItems[index][field] = value;
         setRequisition(prev => ({ ...prev, items: newItems }));
     };
@@ -121,36 +118,40 @@ function RequisitionFormPage() {
 
     // Отправка формы
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+        e.preventDefault();
+        setLoading(true);
+        setError('');
 
-    // --- ДОБАВЬТЕ ЭТОТ ЛОГ ---
-    console.log("СОСТОЯНИЕ ПЕРЕД ФИЛЬТРАЦИЕЙ (requisition.items):", requisition.items);
+        console.log("СОСТОЯНИЕ ПЕРЕД ФИЛЬТРАЦИЕЙ (requisition.items):", requisition.items);
 
-    const payload = {
-        target_facility: requisition.target_facility,
-        required_date: requisition.required_date,
-        comment: requisition.comment,
-        status: requisition.status,
-        items: requisition.items
-            .filter(item => item.chemical && item.quantity)
-            .map(item => ({
-                chemical: item.chemical,
-                quantity: item.quantity,
-                notes: item.notes || ''
-            }))
-    };
-    if (isEditMode) delete payload.status; // Не отправляем статус при редактировании
-    console.log("ОТПРАВЛЯЕМ НА БЭКЕНД:", JSON.stringify(payload, null, 2));
-    try {
-        if (isEditMode) {
-            await apiClient.patch(`/requisitions/${id}/`, payload);
-        } else {
-            await apiClient.post('/requisitions/', payload);
+        const payload = {
+            target_facility: requisition.target_facility,
+            required_date: requisition.required_date,
+            comment: requisition.comment,
+            // --- ПРАВИЛЬНАЯ ЛОГИКА ФИЛЬТРАЦИИ И MAP ---
+            items: requisition.items
+                .filter(item => item.chemical && item.quantity) // Проверяем `chemical`, а не `chemical_id`
+                .map(item => ({
+                    chemical: item.chemical, // Отправляем ID в поле `chemical`
+                    quantity: item.quantity,
+                    notes: item.notes || ''
+                }))
+        };
+        // Статус добавляем только при создании
+        if (!isEditMode) {
+            payload.status = requisition.status;
         }
-        navigate('/requisitions');
-    } catch (err) {
+
+        console.log("ОТПРАВЛЯЕМ НА БЭКЕНД:", JSON.stringify(payload, null, 2));
+        
+        try {
+            if (isEditMode) {
+                await apiClient.patch(`/requisitions/${id}/`, payload);
+            } else {
+                await apiClient.post('/requisitions/', payload);
+            }
+            navigate('/requisitions');
+        } catch (err) {
             setError('Ошибка сохранения заявки.');
             console.error(err);
         } finally {
@@ -218,7 +219,7 @@ function RequisitionFormPage() {
                                 return (
                                     <tr key={item.id}>
                                         <td className="p-2">{isEditable ? (
-                                            <select value={item.chemical_id || item.chemical?.id || ''} onChange={e => handleItemChange(index, 'chemical_id', e.target.value)} required className="w-full p-2 border rounded">
+                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded">
                                                 <option value="">Выберите...</option>
                                                 {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
