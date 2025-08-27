@@ -265,26 +265,26 @@ function RequisitionFormPage() {
                 {isEditable && <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline">+ Добавить позицию</button>}
 
                 {/* --- БЛОК КНОПОК --- */}
-                <div className="mt-8 pt-4 border-t flex justify-between items-center">
-                    <div>
-                        {isEditMode && <RequisitionActionButtons requisition={requisition} onStatusChange={handleStatusUpdate}/>}
-                    </div>
+                <div className="flex items-center space-x-3">
+                    {/* --- ИСПРАВЛЕНИЕ ЗДЕСЬ --- */}
+                    {/* Показываем "Удалить", если это режим редактирования И пользователь - админ */}
+                    {isEditMode && user?.role === 'admin' && (
+                        <button 
+                            type="button" 
+                            onClick={handleDelete}
+                            disabled={loading}
+                            className="bg-red-200 text-red-800 hover:bg-red-300 font-semibold py-2 px-4 rounded"
+                            title="Безвозвратно удалить заявку и отменить связанные поступления"
+                        >
+                            Удалить (Админ)
+                        </button>
+                    )}
+
+                    {/* Кнопка "Сохранить" по-прежнему видна только если можно редактировать */}
                     {isEditable && (
-                        <div className="flex items-center space-x-3">
-                            
-                    <button 
-                        type="button" 
-                        onClick={handleDelete}
-                        disabled={loading}
-                        className="text-red-600 hover:underline px-4 py-2"
-                    >
-                        Удалить
-                    </button>
-                
-                            <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
-                                {loading ? 'Сохранение...' : 'Сохранить изменения'}
-                            </button>
-                        </div>
+                        <button type="submit" disabled={loading} className="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg">
+                            {loading ? 'Сохранение...' : 'Сохранить изменения'}
+                        </button>
                     )}
                 </div>
             </form>

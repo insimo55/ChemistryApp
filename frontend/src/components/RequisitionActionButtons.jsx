@@ -4,19 +4,33 @@ import apiClient from '../api';
 import { useAuthStore } from '../store/auth';
 
 // --- Компонент для одной кнопки, чтобы не повторять стили ---
-const ActionButton = ({ onClick, text, color = 'blue', disabled = false, title = ''  }) => {
+const ActionButton = ({ onClick, text, color = 'blue', disabled = false, title = '' }) => {
+    // Базовые стили для всех кнопок
+    const baseClasses = "text-white font-bold py-2 px-4 rounded shadow-sm transition-colors duration-200";
+
+    // Стили для разных цветов
     const colorClasses = {
         blue: 'bg-blue-500 hover:bg-blue-600',
         green: 'bg-green-500 hover:bg-green-600',
         red: 'bg-red-500 hover:bg-red-600',
         gray: 'bg-gray-500 hover:bg-gray-600',
     };
+    
+    // Стили для неактивного состояния
+    const disabledClasses = "bg-gray-400 cursor-not-allowed";
+
+    // Собираем итоговый className
+    const finalClassName = `
+        ${baseClasses} 
+        ${disabled ? disabledClasses : colorClasses[color]}
+    `;
+
     return (
         <button
             onClick={onClick}
             disabled={disabled}
             title={title}
-            className={`... ${disabled ? 'bg-gray-400 cursor-not-allowed' : colorClasses[color]}`}
+            className={finalClassName.trim()} // .trim() убирает лишние пробелы
         >
             {text}
         </button>
@@ -127,9 +141,7 @@ function RequisitionActionButtons({ requisition, onStatusChange }) {
             case 'completed':
             case 'cancelled':
             case 'overdue':
-                if (role === 'admin') {
-                    return <ActionButton onClick={() => handleStatusChange('draft')} text="Открыть заново (в черновик)" color="gray" />;
-                }
+                
                 return null;
 
             default:
