@@ -71,7 +71,7 @@ function RequisitionsPage() {
                                     <td className="px-5 py-4 text-sm">{req.target_facility_name}</td>
                                     <td className="px-5 py-4 text-sm">{new Date(req.required_date).toLocaleDateString('ru-RU')}</td>
                                     <td className="px-5 py-4 text-sm">{req.created_by_username}</td>
-                                    <td className="...">{req.submitted_at ? new Date(req.submitted_at).toLocaleDateString('ru-RU') : '—'}</td>
+                                    <td className="...">{req.submitted_at ? new Date(req.submitted_at).toLocaleString('ru-RU') : '—'}</td>
                                     <td className="...">{req.approved_by_username || '—'}</td>
                                     <td className="px-5 py-4 text-sm font-mono text-center">{req.items.length}</td>
                                 </tr>
