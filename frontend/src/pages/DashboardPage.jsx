@@ -90,17 +90,17 @@ function DashboardPage() {
               {/* --- ОБНОВЛЕННЫЙ ВЫВОД ДАННЫХ --- */}
               <div className="space-y-2">
                 <div className="flex items-center text-gray-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
-                  <span className="font-semibold">{totals.positionCount} {getNoun(totals.positionCount, 'позиция', 'позиции', 'позиций')}</span>
+                  <span className="font-semibold dark:text-white">{totals.positionCount} {getNoun(totals.positionCount, 'позиция', 'позиции', 'позиций')}</span>
                 </div>
                 {totals.totalWeight > 0 && (
-                  <div className="flex items-center text-gray-700">
+                  <div className="flex items-center text-gray-700 dark:text-white">
                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                     </svg>
-                    <span className="font-semibold">
+                    <span className="font-semibold dark:text-white">
                       {/* toLocaleString() для красивого разделения тысяч пробелами */}
                       {totals.totalWeight.toLocaleString('ru-RU')} кг/л
                     </span>
