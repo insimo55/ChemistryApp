@@ -29,7 +29,7 @@ function Layout() {
   return (
     <div className="min-h-screen flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white flex flex-col">
+      <div className="h-dvh w-64 bg-gray-800 text-white flex flex-col">
         <div className="px-8 py-4 border-b border-gray-700 flex items-center gap-4">
           <a href="/"><img className="w-8 h-8" src="/sample-research.png" alt="header icon" /></a>
           <div>
