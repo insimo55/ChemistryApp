@@ -64,7 +64,7 @@ function DashboardPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Объекты</h1>
+                <h1 className="text-3xl font-bold dark:text-white">Объекты</h1>
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }} // Запоминаем, откуда пришли
@@ -82,10 +82,10 @@ function DashboardPage() {
             <Link 
               key={facility.id} 
               to={`/facilities/${facility.id}`} 
-              className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
+              className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow dark:bg-gray-400"
             >
-              <h2 className="text-xl font-bold text-gray-800">{facility.name}</h2>
-              <p className="text-gray-500 capitalize mb-4">{facility.type}</p>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-white">{facility.name}</h2>
+              <p className="text-gray-500 capitalize mb-4 dark:text-white">{facility.type}</p>
               
               {/* --- ОБНОВЛЕННЫЙ ВЫВОД ДАННЫХ --- */}
               <div className="space-y-2">
