@@ -242,7 +242,7 @@ function RequisitionFormPage() {
                                             )}
                                         </td>
                                         <td className="p-2 w-1/4 text-right">{isEditable ? (
-                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:text-white dark:bg-black dark:border-white"/>
+                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-left dark:text-white dark:bg-black dark:border-white"/>
                                         ) : item.quantity}</td>
                                         <td className="p-2 w-1/6 text-right font-medium dark:text-white">{item.received_quantity || 0}</td>
                                         <td className="p-2 text-center">
