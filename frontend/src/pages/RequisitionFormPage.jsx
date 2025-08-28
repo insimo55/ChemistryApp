@@ -173,7 +173,7 @@ function RequisitionFormPage() {
             </div>
             <h1 className="text-3xl font-bold mb-6 dark:text-white">{isEditMode ? `Редактирование заявки №${id}` : 'Новая заявка'}</h1>
             
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-blue-400">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-500">
                 {error && <p className="bg-red-100 p-3 rounded mb-4 text-sm">{error}</p>}
                 
                 {/* --- СЕКЦИЯ "ШАПКА" ЗАЯВКИ --- */}
