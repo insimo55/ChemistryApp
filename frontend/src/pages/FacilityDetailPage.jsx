@@ -77,8 +77,8 @@ function FacilityDetailPage() {
             {/* --- ШАПКА СТРАНИЦЫ --- */}
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <Link to="/" className="text-blue-600 hover:underline text-sm">&larr; К списку объектов</Link>
-                    <h1 className="text-3xl font-bold">{facility?.name || 'Загрузка...'}</h1>
+                    <Link to="/" className="text-blue-600 hover:underline text-sm dark:text-red-500">&larr; К списку объектов</Link>
+                    <h1 className="text-3xl font-bold dark:text-white">{facility?.name || 'Загрузка...'}</h1>
                 </div>
                 <Link 
                     to="/new-operation" 
@@ -132,7 +132,7 @@ function FacilityDetailPage() {
             )}
 
             {/* --- ОСНОВНАЯ ТАБЛИЦА С ДЕТАЛИЗАЦИЕЙ --- */}
-            <h2 className="text-2xl font-semibold mb-4">Детализация по реагентам</h2>
+            <h2 className="text-2xl font-semibold mb-4 dark:text-white">Детализация по реагентам</h2>
             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
                 <table className="min-w-full">
                     <thead className="bg-gray-50">
