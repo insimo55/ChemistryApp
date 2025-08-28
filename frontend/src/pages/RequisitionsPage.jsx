@@ -30,7 +30,7 @@ function RequisitionsPage() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Реестр заявок</h1>
+                <h1 className="text-3xl font-bold dark:text-white">Реестр заявок</h1>
                 <Link 
                     to="/requisitions/new" 
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
@@ -43,12 +43,12 @@ function RequisitionsPage() {
                 <table className="min-w-full leading-normal">
                     <thead className='bg-gray-50 dark:bg-gray-700'>
                         <tr>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Номер</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Статус</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Объект</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Дата поставки</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Автор</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Позиций</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Номер</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Статус</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Объект</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Дата поставки</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Автор</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Позиций</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
