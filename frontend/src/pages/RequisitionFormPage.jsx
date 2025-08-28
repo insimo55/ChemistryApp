@@ -115,24 +115,6 @@ function RequisitionFormPage() {
             }
         }
     };
-    const sortedChemicals = useMemo(() => {
-            if (transactionType === 'add' || sourceInventory.length === 0) {
-                return chemicals;
-            }
-            const stockMap = new Map(sourceInventory.map(item => [item.chemical.id, parseFloat(item.quantity)]));
-            const chemicalsCopy = [...chemicals];
-            chemicalsCopy.sort((a, b) => {
-                // Проверяем, есть ли реагент в остатках и СТРОГО БОЛЬШЕ ли он нуля
-                const aInStock = (stockMap.get(a.id) || 0) > 0;
-                const bInStock = (stockMap.get(b.id) || 0) > 0;
-    
-                if (aInStock && !bInStock) return -1;
-                if (!aInStock && bInStock) return 1;
-                return 0; // Алфавитный порядок уже задан
-            });
-            
-            return chemicalsCopy;
-        }, [chemicals, sourceInventory, transactionType]);
     
 
     // Отправка формы
@@ -237,14 +219,28 @@ function RequisitionFormPage() {
 
                                 return (
                                     <tr key={item.id}>
-                                        <td className="p-2 w-1/3">{isEditable ? (
-                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-white">
+                                        <td className="p-2 w-1/3">
+                                            {isEditable ? (
+                                                <select
+                                                value={item.chemical}
+                                                onChange={e => handleItemChange(index, 'chemical', e.target.value)}
+                                                required
+                                                className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-white"
+                                                >
                                                 <option value="">Выберите...</option>
-                                                {sortedChemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                            </select>
-                                        ) : (
-                                            item.chemical_name || 'Загрузка...'
-                                        )}</td>
+                                                {chemicals
+                                                    .slice()
+                                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                                    .map(c => (
+                                                    <option key={c.id} value={c.id}>
+                                                        {c.name}
+                                                    </option>
+                                                    ))}
+                                                </select>
+                                            ) : (
+                                                item.chemical_name || 'Загрузка...'
+                                            )}
+                                        </td>
                                         <td className="p-2 w-1/4 text-right">{isEditable ? (
                                             <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:text-white dark:bg-black dark:border-white"/>
                                         ) : item.quantity}</td>
