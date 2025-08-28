@@ -167,7 +167,7 @@ function RequisitionFormPage() {
         <div>
             {/* --- ШАПКА И НАВИГАЦИЯ --- */}
             <div className="mb-4">
-                <Link to="/requisitions" className="text-blue-600 hover:underline font-semibold flex items-center dark:text-white">
+                <Link to="/requisitions" className="text-blue-600 hover:underline font-semibold flex items-center dark:text-red-500">
                    &larr; К реестру заявок
                 </Link>
             </div>
@@ -220,7 +220,7 @@ function RequisitionFormPage() {
                                 return (
                                     <tr key={item.id}>
                                         <td className="p-2 w-1/3">{isEditable ? (
-                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white">
+                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-black">
                                                 <option value="">Выберите...</option>
                                                 {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
@@ -228,9 +228,9 @@ function RequisitionFormPage() {
                                             item.chemical_name || 'Загрузка...'
                                         )}</td>
                                         <td className="p-2 w-1/4 text-right">{isEditable ? (
-                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right"/>
+                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:text-white dark:bg-black dark:border-black"/>
                                         ) : item.quantity}</td>
-                                        <td className="p-2 w-1/6 text-right font-medium">{item.received_quantity || 0}</td>
+                                        <td className="p-2 w-1/6 text-right font-medium dark:text-white">{item.received_quantity || 0}</td>
                                         <td className="p-2 text-center">
                                             {isCompleted 
                                                 ? <span className="text-green-600 font-semibold">✅&nbsp;Выполнено</span>
@@ -246,7 +246,7 @@ function RequisitionFormPage() {
                                                         <button type="button" onClick={() => setReceivingItem(item)} className="bg-green-500 text-white text-xs px-3 py-1 rounded hover:bg-green-600">Принять</button>
                                                     )}
                                                     {item.received_quantity > 0 && ['in_progress', 'partially_completed'].includes(requisition.status) && (
-                                                        <button type="button" onClick={() => handleRevertItem(item.id)} className="text-gray-500 hover:text-red-600 text-xs ml-2" title="Отменить все приемки по этой позиции">(откатить)</button>
+                                                        <button type="button" onClick={() => handleRevertItem(item.id)} className="text-gray-500 hover:text-red-600 text-xs ml-2 dark:text-white" title="Отменить все приемки по этой позиции">(откатить)</button>
                                                     )}
                                                 </>
                                             )}
@@ -258,7 +258,7 @@ function RequisitionFormPage() {
                     </table>
                 </div>
 
-                {isEditable && <button type="button" onClick={addItem} className="mt-2 text-sm text-blue-600 hover:underline">+ Добавить позицию</button>}
+                {isEditable && <button type="button" onClick={addItem} className="mt-2 text-sm text-blue-600 hover:underline dark:text-red-600">+ Добавить позицию</button>}
 
                 {/* --- БЛОК КНОПОК УПРАВЛЕНИЯ --- */}
                 <div className="mt-8 pt-4 border-t flex justify-between items-center">
