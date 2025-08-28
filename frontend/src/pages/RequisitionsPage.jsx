@@ -72,7 +72,23 @@ function RequisitionsPage() {
                                     <td className="px-5 py-4 text-sm">{new Date(req.required_date).toLocaleDateString('ru-RU')}</td>
                                     <td className="px-5 py-4 text-sm">{req.created_by_username}</td>
                                     <td className="...">{req.submitted_at ? new Date(req.submitted_at).toLocaleString('ru-RU') : '—'}</td>
-                                    <td className="...">{req.approved_by_username || '—'}</td>
+                                    <td className="px-5 py-4 text-sm">
+                                        {/* Если есть имя утвердившего, показываем его */}
+                                        {req.approved_by_username ? (
+                                            <div>
+                                                <p className="font-medium text-gray-900">{req.approved_by_username}</p>
+                                                {/* А если есть еще и дата, показываем ее ниже */}
+                                                {req.approved_at && (
+                                                    <p className="text-xs text-gray-500">
+                                                        {new Date(req.approved_at).toLocaleString('ru-RU')}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            // Если никто не утверждал, показываем прочерк
+                                            '—'
+                                        )}
+                                    </td>
                                     <td className="px-5 py-4 text-sm font-mono text-center">{req.items.length}</td>
                                 </tr>
                             );
