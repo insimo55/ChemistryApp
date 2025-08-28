@@ -193,6 +193,16 @@ function RequisitionFormPage() {
                         <label htmlFor="status" className="block text-sm font-medium dark:text-white">Статус</label>
                         <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100 dark:text-white dark:bg-black dark:border-black"/>
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Утвердил</label>
+                        <input 
+                            type="text"
+                            value={requisition.approved_by_username || 'Ожидает утверждения'}
+                            readOnly
+                            disabled
+                            className="mt-1 block w-full p-2 border rounded bg-gray-100"
+                        />
+                    </div>
                     <div className="md:col-span-2 lg:col-span-3">
                          <label htmlFor="comment" className="block text-sm font-medium dark:text-white">Комментарий</label>
                          <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-black dark:border-black"></textarea>

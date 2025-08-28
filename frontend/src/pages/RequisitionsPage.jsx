@@ -48,6 +48,8 @@ function RequisitionsPage() {
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Объект</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Дата поставки</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Автор</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Подана</th> {/* <-- Новая колонка */}
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Утверждена</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Позиций</th>
                         </tr>
                     </thead>
@@ -69,6 +71,8 @@ function RequisitionsPage() {
                                     <td className="px-5 py-4 text-sm">{req.target_facility_name}</td>
                                     <td className="px-5 py-4 text-sm">{new Date(req.required_date).toLocaleDateString('ru-RU')}</td>
                                     <td className="px-5 py-4 text-sm">{req.created_by_username}</td>
+                                    <td className="...">{req.submitted_at ? new Date(req.submitted_at).toLocaleDateString('ru-RU') : '—'}</td>
+                                    <td className="...">{req.approved_by_username || '—'}</td>
                                     <td className="px-5 py-4 text-sm font-mono text-center">{req.items.length}</td>
                                 </tr>
                             );
