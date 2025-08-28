@@ -105,16 +105,34 @@ function RequisitionFormPage() {
     };
 
     const handleRevertItem = async (itemId) => {
-    if (window.confirm("Вы уверены, что хотите отменить ВСЕ приемки по этой позиции? Связанные поступления на склад будут удалены.")) {
-        try {
-            const response = await apiClient.post('/requisitions/revert-item/', { item_id: itemId });
-            // Бэкенд возвращает обновленную заявку целиком, обновляем состояние
-            setRequisition(response.data);
-        } catch (error) {
-            setError("Ошибка отмены приемки.");
+        if (window.confirm("Вы уверены, что хотите отменить ВСЕ приемки по этой позиции? Связанные поступления на склад будут удалены.")) {
+            try {
+                const response = await apiClient.post('/requisitions/revert-item/', { item_id: itemId });
+                // Бэкенд возвращает обновленную заявку целиком, обновляем состояние
+                setRequisition(response.data);
+            } catch (error) {
+                setError("Ошибка отмены приемки.");
+            }
         }
-    }
-};
+    };
+    const sortedChemicals = useMemo(() => {
+            if (transactionType === 'add' || sourceInventory.length === 0) {
+                return chemicals;
+            }
+            const stockMap = new Map(sourceInventory.map(item => [item.chemical.id, parseFloat(item.quantity)]));
+            const chemicalsCopy = [...chemicals];
+            chemicalsCopy.sort((a, b) => {
+                // Проверяем, есть ли реагент в остатках и СТРОГО БОЛЬШЕ ли он нуля
+                const aInStock = (stockMap.get(a.id) || 0) > 0;
+                const bInStock = (stockMap.get(b.id) || 0) > 0;
+    
+                if (aInStock && !bInStock) return -1;
+                if (!aInStock && bInStock) return 1;
+                return 0; // Алфавитный порядок уже задан
+            });
+            
+            return chemicalsCopy;
+        }, [chemicals, sourceInventory, transactionType]);
     
 
     // Отправка формы
@@ -222,7 +240,7 @@ function RequisitionFormPage() {
                                         <td className="p-2 w-1/3">{isEditable ? (
                                             <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-white">
                                                 <option value="">Выберите...</option>
-                                                {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                                {sortedChemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
                                         ) : (
                                             item.chemical_name || 'Загрузка...'
