@@ -43,12 +43,12 @@ function RequisitionsPage() {
                 <table className="min-w-full leading-normal">
                     <thead className='bg-gray-50 dark:bg-gray-700'>
                         <tr>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Номер</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Статус</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Объект</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Дата поставки</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Автор</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white">Позиций</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Номер</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Статус</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Объект</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Дата поставки</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Автор</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Позиций</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
