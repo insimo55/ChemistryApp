@@ -2,6 +2,7 @@
 import React from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/auth';
+import ThemeToggle from './ThemeToggle';
 
 const SidebarLink = ({ to, children }) => (
   <NavLink
@@ -63,6 +64,7 @@ function Layout() {
             </>
           )}
         </nav>
+        <ThemeToggle />
         <div className="p-4 border-t border-gray-700">
             <p className="font-semibold">{user?.username}</p>
             <p className="text-sm text-gray-400 capitalize">{user?.role}</p>

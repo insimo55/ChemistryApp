@@ -39,9 +39,9 @@ function RequisitionsPage() {
                 </Link>
             </div>
 
-            <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <table className="min-w-full leading-normal">
-                    <thead>
+                    <thead className='bg-gray-50 dark:bg-gray-700'>
                         <tr>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Номер</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Статус</th>
@@ -51,13 +51,13 @@ function RequisitionsPage() {
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Позиций</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {requisitions.map(req => {
                             const statusInfo = statusStyles[req.status] || statusStyles.default;
                             return (
                                 <tr 
                                     key={req.id} 
-                                    className="hover:bg-gray-50 cursor-pointer"
+                                    className="hover:bg-gray-50 cursor-pointer dark:hover:bg-gray-600"
                                     onClick={() => navigate(`/requisitions/${req.id}`)}
                                 >
                                     <td className="px-5 py-4 text-sm font-medium">Заявка №{req.id}</td>
