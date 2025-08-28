@@ -1,5 +1,5 @@
-import React, { StrictMode } from 'react';
-import { createRoot, ReactDOM } from 'react-dom/client';
+import React from 'react';
+import { ReactDOM } from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
 import {ThemeProvider} from './context/ThemeProvider.jsx';
