@@ -1,5 +1,5 @@
 // frontend/src/pages/RequisitionFormPage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback,useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api';
 import { statusStyles } from '../utils/styleHelpers';
