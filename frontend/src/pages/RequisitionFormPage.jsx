@@ -167,49 +167,49 @@ function RequisitionFormPage() {
         <div>
             {/* --- ШАПКА И НАВИГАЦИЯ --- */}
             <div className="mb-4">
-                <Link to="/requisitions" className="text-blue-600 hover:underline font-semibold flex items-center">
+                <Link to="/requisitions" className="text-blue-600 hover:underline font-semibold flex items-center dark:text-white">
                    &larr; К реестру заявок
                 </Link>
             </div>
-            <h1 className="text-3xl font-bold mb-6">{isEditMode ? `Редактирование заявки №${id}` : 'Новая заявка'}</h1>
+            <h1 className="text-3xl font-bold mb-6 dark:text-white">{isEditMode ? `Редактирование заявки №${id}` : 'Новая заявка'}</h1>
             
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-600">
                 {error && <p className="bg-red-100 p-3 rounded mb-4 text-sm">{error}</p>}
                 
                 {/* --- СЕКЦИЯ "ШАПКА" ЗАЯВКИ --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 pb-6 border-b">
                     <div>
-                        <label htmlFor="target_facility" className="block text-sm font-medium">Объект назначения</label>
-                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed">
+                        <label htmlFor="target_facility" className="block text-sm font-medium dark:text-white">Объект назначения</label>
+                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white">
                             <option value="">Выберите объект...</option>
                             {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="required_date" className="block text-sm font-medium">Желаемая дата поставки</label>
-                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"/>
+                        <label htmlFor="required_date" className="block text-sm font-medium dark:text-white">Желаемая дата поставки</label>
+                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white"/>
                     </div>
                     <div>
-                        <label htmlFor="status" className="block text-sm font-medium">Статус</label>
-                        <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100"/>
+                        <label htmlFor="status" className="block text-sm font-medium dark:text-white">Статус</label>
+                        <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100 dark:text-white"/>
                     </div>
                     <div className="md:col-span-2 lg:col-span-3">
-                         <label htmlFor="comment" className="block text-sm font-medium">Комментарий</label>
-                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed"></textarea>
+                         <label htmlFor="comment" className="block text-sm font-medium dark:text-white">Комментарий</label>
+                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white"></textarea>
                     </div>
                 </div>
 
                 {/* --- СЕКЦИЯ "ПОЗИЦИИ" ЗАЯВКИ --- */}
-                <h3 className="text-lg font-semibold mb-4">Позиции заявки</h3>
+                <h3 className="text-lg font-semibold mb-4 dark:text-white">Позиции заявки</h3>
                 <div className="bg-white rounded-lg overflow-x-auto">
                     <table className="min-w-full">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="p-3 text-left text-xs font-semibold uppercase">Реагент</th>
-                                <th className="p-3 text-right text-xs font-semibold uppercase">Заказано</th>
-                                <th className="p-3 text-right text-xs font-semibold uppercase">Получено</th>
-                                <th className="p-3 text-center text-xs font-semibold uppercase">Статус</th>
-                                <th className="p-3 text-right text-xs font-semibold uppercase">Действие</th>
+                                <th className="p-3 text-left text-xs font-semibold uppercase dark:text-white">Реагент</th>
+                                <th className="p-3 text-right text-xs font-semibold uppercase dark:text-white">Заказано</th>
+                                <th className="p-3 text-right text-xs font-semibold uppercase dark:text-white">Получено</th>
+                                <th className="p-3 text-center text-xs font-semibold uppercase dark:text-white">Статус</th>
+                                <th className="p-3 text-right text-xs font-semibold uppercase dark:text-white">Действие</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
@@ -220,7 +220,7 @@ function RequisitionFormPage() {
                                 return (
                                     <tr key={item.id}>
                                         <td className="p-2 w-1/3">{isEditable ? (
-                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded">
+                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white">
                                                 <option value="">Выберите...</option>
                                                 {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
