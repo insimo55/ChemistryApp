@@ -173,7 +173,7 @@ function RequisitionFormPage() {
             </div>
             <h1 className="text-3xl font-bold mb-6 dark:text-white">{isEditMode ? `Редактирование заявки №${id}` : 'Новая заявка'}</h1>
             
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-600">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-blue-400">
                 {error && <p className="bg-red-100 p-3 rounded mb-4 text-sm">{error}</p>}
                 
                 {/* --- СЕКЦИЯ "ШАПКА" ЗАЯВКИ --- */}
@@ -220,7 +220,7 @@ function RequisitionFormPage() {
                                 return (
                                     <tr key={item.id}>
                                         <td className="p-2 w-1/3">{isEditable ? (
-                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-black">
+                                            <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:text-white dark:bg-black dark:border-white">
                                                 <option value="">Выберите...</option>
                                                 {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                             </select>
@@ -228,7 +228,7 @@ function RequisitionFormPage() {
                                             item.chemical_name || 'Загрузка...'
                                         )}</td>
                                         <td className="p-2 w-1/4 text-right">{isEditable ? (
-                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:text-white dark:bg-black dark:border-black"/>
+                                            <input type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:text-white dark:bg-black dark:border-white"/>
                                         ) : item.quantity}</td>
                                         <td className="p-2 w-1/6 text-right font-medium dark:text-white">{item.received_quantity || 0}</td>
                                         <td className="p-2 text-center">
@@ -258,7 +258,7 @@ function RequisitionFormPage() {
                     </table>
                 </div>
 
-                {isEditable && <button type="button" onClick={addItem} className="mt-2 text-sm text-blue-600 hover:underline dark:text-red-600">+ Добавить позицию</button>}
+                {isEditable && <button type="button" onClick={addItem} className="mt-2 text-sm text-blue-600 hover:underline dark:text-blue-300">+ Добавить позицию</button>}
 
                 {/* --- БЛОК КНОПОК УПРАВЛЕНИЯ --- */}
                 <div className="mt-8 pt-4 border-t flex justify-between items-center">
