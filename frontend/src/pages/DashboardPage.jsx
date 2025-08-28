@@ -83,6 +83,7 @@ function DashboardPage() {
               key={facility.id} 
               to={`/facilities/${facility.id}`} 
               className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow dark:bg-gray-400"
+              style="animation-delay:0.2s;border: white 2px"
             >
               <h2 className="text-xl font-bold text-gray-800 dark:text-white">{facility.name}</h2>
               <p className="text-gray-500 capitalize mb-4 dark:text-white">{facility.type}</p>
