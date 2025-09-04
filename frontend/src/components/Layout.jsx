@@ -78,7 +78,7 @@ function Layout() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 p-10 bg-gray-100 dark:bg-gray-900 ml-64">
+      <main className="flex-1 p-10 bg-gray-100 dark:bg-neutral-950 ml-64">
         <Outlet /> {/* Здесь будут отображаться дочерние роуты */}
       </main>
     </div>

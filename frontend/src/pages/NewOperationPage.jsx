@@ -257,33 +257,33 @@ function NewOperationPage() {
      return (
         <div>
             <div className="flex items-center justify-between mb-4">
-                <button onClick={handleBack} className="text-blue-600 hover:underline font-semibold flex items-center">
+                <button onClick={handleBack} className="text-blue-600 hover:underline font-semibold flex items-center dark:text-blue-400">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                     Назад
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800">{isEditMode ? 'Редактирование операции' : 'Новая операция'}</h1>
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{isEditMode ? 'Редактирование операции' : 'Новая операция'}</h1>
                 <div></div> 
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-neutral-800">
                 {error && <p className="bg-red-100 border border-red-400 text-red-700 p-3 rounded mb-4 text-sm whitespace-pre-wrap">{error}</p>}
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 pb-4 border-b">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 pb-4 border-b dark:border-gray-500">
                     <div>
-                        <label htmlFor="transaction_type" className="block text-sm font-medium text-gray-700">Тип операции</label>
-                        <select id="transaction_type" value={transactionType} onChange={e => { setTransactionType(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm disabled:bg-gray-100">
+                        <label htmlFor="transaction_type" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Тип операции</label>
+                        <select id="transaction_type" value={transactionType} onChange={e => { setTransactionType(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm disabled:bg-gray-100 ">
                             {user?.role !== 'engineer' && <option value="add">Поступление</option>}
                             <option value="consume">Списание</option>
                             {user?.role !== 'engineer' && <option value="transfer">Перемещение</option>}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="operation_date" className="block text-sm font-medium text-gray-700">Дата и время операции</label>
+                        <label htmlFor="operation_date" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Дата и время операции</label>
                         <input id="operation_date" type="datetime-local" value={operationDate} onChange={e => { setOperationDate(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"/>
                     </div>
                     {(transactionType === 'consume' || transactionType === 'transfer') && (
                         <div>
-                            <label htmlFor="from_facility" className="block text-sm font-medium text-gray-700">Из объекта (Откуда)</label>
+                            <label htmlFor="from_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Из объекта (Откуда)</label>
                             <select id="from_facility" value={fromFacilityId} onChange={e => { setFromFacilityId(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm disabled:bg-gray-100">
                                 <option value="">Выберите объект...</option>
                                 {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
@@ -292,7 +292,7 @@ function NewOperationPage() {
                     )}
                     {(transactionType === 'add' || transactionType === 'transfer') && (
                         <div>
-                            <label htmlFor="to_facility" className="block text-sm font-medium text-gray-700">В объект (Куда)</label>
+                            <label htmlFor="to_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-100">В объект (Куда)</label>
                             <select id="to_facility" value={toFacilityId} onChange={e => { setToFacilityId(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm">
                                 <option value="">Выберите объект...</option>
                                 {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
@@ -300,18 +300,18 @@ function NewOperationPage() {
                         </div>
                     )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 dark:border-gray-500">
                     <div>
-                        <label htmlFor="comment" className="block text-sm font-medium text-gray-700">Общий комментарий</label>
+                        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Общий комментарий</label>
                         <textarea id="comment" value={comment} onChange={e => { setComment(e.target.value); setIsDirty(true); }} rows="3" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm"></textarea>
                     </div>
                     <div>
-                        <label htmlFor="document_file" className="block text-sm font-medium text-gray-700">Сопроводительный документ</label>
+                        <label htmlFor="document_file" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Сопроводительный документ</label>
                         <input id="document_file" type="file" onChange={(e) => { setDocumentFile(e.target.files[0]); setIsDirty(true); }} className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
                     </div>
                 </div>
                 
-                <h3 className="text-lg font-semibold mt-6 mb-4 border-t pt-4">Реагенты</h3>
+                <h3 className="text-lg font-semibold mt-6 mb-4 border-t pt-4 dark:text-gray-100 dark:border-gray-500">Реагенты</h3>
                 <div className="space-y-6">
                 {items.map((item, index) => {
                     const stock = sourceInventory.find(inv => inv.chemical.id === parseInt(item.chemicalId));
@@ -319,9 +319,9 @@ function NewOperationPage() {
                     const inStockIds = new Set(sourceInventory.map(invItem => invItem.chemical.id));
                     const stockMap = new Map(sourceInventory.map(invItem => [invItem.chemical.id, parseFloat(invItem.quantity)]));  
                     return (
-                        <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border">
+                        <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border dark:bg-neutral-800 dark:border-neutral-800">
                             <div className="flex-grow">
-                                <label className="text-xs text-gray-500">Реагент</label>
+                                <label className="text-xs text-gray-500 dark:text-gray-100">Реагент</label>
                                 <div className="flex items-center space-x-1">
                                     <select required value={item.chemicalId} onChange={e => handleItemChange(index, 'chemicalId', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md">
                                         <option value="">Выберите реагент...</option>
@@ -355,7 +355,7 @@ function NewOperationPage() {
                                 </div>
                             </div>
                             <div className="relative w-1/3">
-                                <label className="text-xs text-gray-500">Количество</label>
+                                <label className="text-xs text-gray-500 dark:text-gray-100">Количество</label>
                                 <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во" className="w-full p-2 border border-gray-300 rounded-md" />
                                 {(transactionType === 'consume' || transactionType === 'transfer') && item.chemicalId && (
                                     <span className={`absolute -bottom-5 right-0 text-xs ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500' : 'text-red-500 font-semibold'}`}>
@@ -370,10 +370,10 @@ function NewOperationPage() {
                     );
                 })}
                 </div>
-                <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline">+ Добавить строку</button>
+                <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline dark:text-blue-300">+ Добавить строку</button>
                 
-                <div className="mt-8 pt-4 border-t text-right">
-                    <button type="submit" disabled={loading} className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-700 disabled:bg-gray-400">
+                <div className="mt-8 pt-4 border-t text-right dark:border-gray-500">
+                    <button type="submit" disabled={loading} className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-700 disabled:bg-gray-400 dark:bg-blue-400 dark:hover:bg-blue-600 transition-colors">
                         {loading ? 'Выполнение...' : (isEditMode ? 'Сохранить изменения' : 'Выполнить операцию')}
                     </button>
                 </div>

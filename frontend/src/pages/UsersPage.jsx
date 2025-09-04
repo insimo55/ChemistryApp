@@ -72,26 +72,26 @@ const UserForm = ({ user, onSuccess, onClose }) => {
     
        return (
         <form onSubmit={handleSubmit}>
-            <h3 className="text-xl font-semibold mb-6">
+            <h3 className="text-xl font-semibold mb-6 dark:text-gray-100">
                 {isEditMode ? `Редактирование: ${user.username}` : 'Новый пользователь'}
             </h3>
             {error && <p className="bg-red-100 text-red-700 p-2 rounded mb-4">{error}</p>}
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium">Имя пользователя</label>
-                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} required disabled={isEditMode} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100"/>
+                    <label className="block text-sm font-medium dark:text-gray-100">Имя пользователя</label>
+                    <input type="text" value={username} onChange={e => setUsername(e.target.value)} required disabled={isEditMode} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium">Email</label>
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1 block w-full p-2 border rounded"/>
+                    <label className="block text-sm font-medium dark:text-gray-100">Email</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="mt-1 block w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium">Пароль</label>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required={!isEditMode} placeholder={isEditMode ? "Оставьте пустым, чтобы не менять" : ""} className="mt-1 block w-full p-2 border rounded"/>
+                    <label className="block text-sm font-medium dark:text-gray-100">Пароль</label>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required={!isEditMode} placeholder={isEditMode ? "Оставьте пустым, чтобы не менять" : ""} className="mt-1 block w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium">Роль</label>
-                    <select value={role} onChange={e => setRole(e.target.value)} className="mt-1 block w-full p-2 border rounded">
+                    <label className="block text-sm font-medium dark:text-gray-100">Роль</label>
+                    <select value={role} onChange={e => setRole(e.target.value)} className="mt-1 block w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100">
                         <option value="admin">Администратор</option>
                         <option value="logistician">Логист</option>
                         <option value="engineer">Инженер</option>
@@ -99,8 +99,8 @@ const UserForm = ({ user, onSuccess, onClose }) => {
                 </div>
                 {role === 'engineer' && (
                     <div>
-                         <label className="block text-sm font-medium">Закрепленный объект</label>
-                         <select value={relatedFacilityId} onChange={e => setRelatedFacilityId(e.target.value)} required className="mt-1 block w-full p-2 border rounded">
+                         <label className="block text-sm font-medium dark:text-gray-100">Закрепленный объект</label>
+                         <select value={relatedFacilityId} onChange={e => setRelatedFacilityId(e.target.value)} required className="mt-1 block w-full p-2 border rounded dark:bg-gray-700 dark:text-gray-100">
                             <option value="">Выберите объект...</option>
                             {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                          </select>
@@ -231,7 +231,7 @@ function UsersPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold">Управление пользователями</h1>
+            <h1 className="text-3xl font-bold dark:text-gray-100">Управление пользователями</h1>
             <button 
                 onClick={() => openModal(null)} 
                 className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
@@ -242,7 +242,7 @@ function UsersPage() {
       <div className="mt-6 bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full leading-normal">
           <thead>
-            <tr>
+            <tr className='dark:bg-neutral-700 dark:text-gray-100'>
               <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Пользователь</th>
               <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Email</th>
               <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Роль</th>
@@ -252,7 +252,7 @@ function UsersPage() {
           </thead>
           <tbody>
               {users.map(user => (
-                  <tr key={user.id}>
+                  <tr key={user.id} className='dark:bg-gray-700 dark:text-gray-100'>
                       <td className="px-5 py-5 border-b text-sm">{user.username}</td>
                       <td className="px-5 py-5 border-b text-sm">{user.email}</td>
                       <td className="px-5 py-5 border-b text-sm capitalize">{user.role}</td>
@@ -262,7 +262,7 @@ function UsersPage() {
                                 {user.related_facility_name || '—'}
                             </td>
                       <td className="px-5 py-5 border-b text-sm text-right">
-                        <button onClick={() => openModal(user)} className="text-indigo-600 hover:text-indigo-900">Редактировать</button>
+                        <button onClick={() => openModal(user)} className="text-indigo-600 hover:text-indigo-900 dark:text-emerald-400 dark:hover:text-emerald-600">Редактировать</button>
                       </td>
                   </tr>
               ))}

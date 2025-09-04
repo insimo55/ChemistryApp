@@ -27,17 +27,17 @@ const FacilityForm = ({ facility, onSuccess, onClose }) => {
     
     return (
         <form onSubmit={handleSubmit}>
-            <h3 className="text-xl font-semibold mb-6">{facility ? 'Редактирование объекта' : 'Новый объект'}</h3>
+            <h3 className="text-xl font-semibold mb-6 dark:text-gray-100">{facility ? 'Редактирование объекта' : 'Новый объект'}</h3>
             <div className="space-y-4">
                 {/* Поле для Названия */}
                 <div>
-                    <label className="block text-sm">Название</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border rounded"/>
+                    <label className="block text-sm dark:text-gray-100">Название</label>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border rounded dark:text-gray-100 dark:bg-gray-700"/>
                 </div>
                 {/* Поле для Типа */}
                 <div>
-                    <label className="block text-sm">Тип</label>
-                    <select value={type} onChange={e => setType(e.target.value)} className="mt-1 block w-full p-2 border rounded">
+                    <label className="block text-sm dark:text-gray-100">Тип</label>
+                    <select value={type} onChange={e => setType(e.target.value)} className="mt-1 block w-full p-2 border rounded dark:text-gray-100 dark:bg-gray-700">
                         <option value="warehouse">Склад</option>
                         <option value="well">Скважина</option>
                         <option value="other">Прочее</option>
@@ -45,8 +45,8 @@ const FacilityForm = ({ facility, onSuccess, onClose }) => {
                 </div>
                 {/* Поле для Местоположения */}
                  <div>
-                    <label className="block text-sm">Местоположение</label>
-                    <input type="text" value={location} onChange={e => setLocation(e.target.value)} className="mt-1 block w-full p-2 border rounded"/>
+                    <label className="block text-sm dark:text-gray-100 ">Местоположение</label>
+                    <input type="text" value={location} onChange={e => setLocation(e.target.value)} className="mt-1 block w-full p-2 border rounded dark:text-gray-100 dark:bg-gray-700"/>
                 </div>
             </div>
             <div className="mt-6 flex justify-end space-x-3">
@@ -98,13 +98,13 @@ function FacilitiesAdminPage() {
     return (
         <div>
             <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold">Управление объектами</h1>
-                <button onClick={openCreateModal} className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">+ Добавить объект</button>
+                <h1 className="text-3xl font-bold dark:text-gray-100">Управление объектами</h1>
+                <button onClick={openCreateModal} className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded dark:bg-blue-600 dark:hover:bg-blue-800 transition-colors">+ Добавить объект</button>
             </div>
             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
                 <table className="min-w-full leading-normal">
                     <thead>
-                        <tr>
+                        <tr className='dark:bg-neutral-600 dark:text-gray-100'>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Название</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Тип</th>
                             <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Местоположение</th>
@@ -113,13 +113,13 @@ function FacilitiesAdminPage() {
                     </thead>
                     <tbody>
                         {facilities.map(fac => (
-                            <tr key={fac.id}>
-                                <td className="px-5 py-5 border-b text-sm">{fac.name}</td>
-                                <td className="px-5 py-5 border-b text-sm capitalize">{fac.type}</td>
-                                <td className="px-5 py-5 border-b text-sm">{fac.location || '—'}</td>
+                            <tr key={fac.id} className='dark:bg-gray-700'>
+                                <td className="px-5 py-5 border-b text-sm dark:text-gray-100">{fac.name}</td>
+                                <td className="px-5 py-5 border-b text-sm capitalize dark:text-gray-100">{fac.type}</td>
+                                <td className="px-5 py-5 border-b text-sm dark:text-gray-100">{fac.location || '—'}</td>
                                 <td className="px-5 py-5 border-b text-sm text-right">
-                                    <button onClick={() => openEditModal(fac)} className="text-indigo-600 hover:text-indigo-900 mr-4">Редактировать</button>
-                                    <button onClick={() => handleDelete(fac.id)} className="text-red-600 hover:text-red-900">Удалить</button>
+                                    <button onClick={() => openEditModal(fac)} className="text-indigo-600 hover:text-indigo-900 mr-4 dark:text-green-400 dark:hover:text-green-600">Редактировать</button>
+                                    <button onClick={() => handleDelete(fac.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-600">Удалить</button>
                                 </td>
                             </tr>
                         ))}

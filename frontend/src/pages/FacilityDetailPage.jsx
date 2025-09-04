@@ -83,22 +83,22 @@ function FacilityDetailPage() {
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow"
                 >
                     Провести операцию
                 </Link>
             </div>
 
             {/* --- БЛОК ВЫБОРА ПЕРИОДА И УПРАВЛЕНИЯ ОТЧЕТОМ --- */}
-            <div className="p-4 border rounded-lg mb-6 bg-white shadow-sm">
-                <h3 className="font-semibold mb-2 text-gray-700">Отчет по движению реагентов</h3>
+            <div className="p-4 border rounded-lg mb-6 bg-white shadow-sm dark:bg-neutral-800 dark:border-black">
+                <h3 className="font-semibold mb-2 text-gray-700 dark:text-gray-100">Отчет по движению реагентов</h3>
                 <div className="flex flex-wrap items-end gap-4">
                     <div>
-                        <label htmlFor="start-date" className="block text-xs font-medium text-gray-600">С даты</label>
+                        <label htmlFor="start-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">С даты</label>
                         <input id="start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full"/>
                     </div>
                     <div>
-                        <label htmlFor="end-date" className="block text-xs font-medium text-gray-600">По дату</label>
+                        <label htmlFor="end-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">По дату</label>
                         <input id="end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full"/>
                     </div>
                     {/* Кнопка "Обновить" теперь не нужна, так как отчет обновляется автоматически при смене дат */}
@@ -108,50 +108,50 @@ function FacilityDetailPage() {
             {/* --- БЛОК С ОБЩИМИ ИТОГАМИ (SUMMARY) --- */}
             {loading && <p className="text-center p-4">Обновление отчета...</p>}
             {reportData && !loading && (
-                <div className="p-4 rounded-lg mb-6 bg-blue-50 border border-blue-200">
-                    <h4 className="font-semibold mb-2 text-blue-800">Итого за период:</h4>
+                <div className="p-4 rounded-lg mb-6 bg-blue-50 border border-blue-200 dark:bg-neutral-800 dark:border-black">
+                    <h4 className="font-semibold mb-2 text-blue-800 dark:text-blue-400">Итого за период:</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                         <div>
-                            <div className="text-sm text-gray-600">Начальный остаток</div>
-                            <div className="text-xl font-bold text-gray-800">{reportData.summary.opening_balance}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-200">Начальный остаток</div>
+                            <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.opening_balance}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-green-700">Приход</div>
-                            <div className="text-xl font-bold text-green-700">+{reportData.summary.income}</div>
+                            <div className="text-sm text-green-700 dark:text-green-400">Приход</div>
+                            <div className="text-xl font-bold text-green-700 dark:text-green-400">+{reportData.summary.income}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-red-700">Расход</div>
-                            <div className="text-xl font-bold text-red-700">-{reportData.summary.outcome}</div>
+                            <div className="text-sm text-red-700 dark:text-red-500">Расход</div>
+                            <div className="text-xl font-bold text-red-700 dark:text-red-500">-{reportData.summary.outcome}</div>
                         </div>
                          <div>
-                            <div className="text-sm text-gray-600">Конечный остаток</div>
-                            <div className="text-xl font-bold text-gray-800">{reportData.summary.closing_balance}</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-200">Конечный остаток</div>
+                            <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.closing_balance}</div>
                         </div>
                     </div>
                 </div>
             )}
 
             {/* --- ОСНОВНАЯ ТАБЛИЦА С ДЕТАЛИЗАЦИЕЙ --- */}
-            <h2 className="text-2xl font-semibold mb-4 dark:text-white">Детализация по реагентам</h2>
+            <h2 className="text-2xl font-semibold mb-4 dark:text-gray-100">Детализация по реагентам</h2>
             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 dark:bg-neutral-700 dark:border-neutral-700">
                         <tr>
-                            <th className="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Реагент</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase">Нач. остаток</th>
-                            <th className="p-3 text-right text-xs font-semibold text-green-600 uppercase">Приход</th>
-                            <th className="p-3 text-right text-xs font-semibold text-red-600 uppercase">Расход</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase">Кон. остаток</th>
+                            <th className="p-3 text-left text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Реагент</th>
+                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Нач. остаток</th>
+                            <th className="p-3 text-right text-xs font-semibold text-green-600 uppercase dark:text-green-400">Приход</th>
+                            <th className="p-3 text-right text-xs font-semibold text-red-600 uppercase dark:text-red-500">Расход</th>
+                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Кон. остаток</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                         {reportData?.details.slice().sort((a, b) => a.chemical_name.localeCompare(b.chemical_name)).map((item) => (
-                            <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
-                                <td className="p-3 whitespace-nowrap">{item.chemical_name} <span className="text-xs text-gray-400">({item.unit})</span></td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono">{item.opening_balance}</td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono text-green-600">+{item.income}</td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono text-red-600">-{item.outcome}</td>
-                                <td className={`p-3 whitespace-nowrap text-right font-mono font-bold ${parseFloat(item.closing_balance) < 0 ? 'text-red-600' : ''}`}>{item.closing_balance}</td>
+                            <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer dark:bg-neutral-600 dark:hover:bg-neutral-500" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
+                                <td className="p-3 whitespace-nowrap dark:text-gray-200">{item.chemical_name} <span className="text-xs text-gray-400 dark:text-neutral-300">({item.unit})</span></td>
+                                <td className="p-3 whitespace-nowrap text-right font-mono dark:text-gray-100">{item.opening_balance}</td>
+                                <td className="p-3 whitespace-nowrap text-right font-mono text-green-600 dark:text-green-400">+{item.income}</td>
+                                <td className="p-3 whitespace-nowrap text-right font-mono text-red-600 dark:text-red-600">-{item.outcome}</td>
+                                <td className={`p-3 whitespace-nowrap text-right font-mono font-bold dark:text-gray-100 ${parseFloat(item.closing_balance) < 0 ? 'text-red-600' : ''}`}>{item.closing_balance}</td>
                             </tr>
                         ))}
                          {(!reportData?.details || reportData?.details.length === 0) && !loading && (

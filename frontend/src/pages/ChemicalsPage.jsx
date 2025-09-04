@@ -45,8 +45,8 @@ function ChemicalsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Справочник реагентов</h1>
-        <button onClick={openCreateModal} className="bg-blue-500 text-white py-2 px-4 rounded">
+        <h1 className="text-3xl font-bold dark:text-gray-100">Справочник реагентов</h1>
+        <button onClick={openCreateModal} className="bg-blue-500 text-white py-2 px-4 rounded  dark:bg-blue-600 dark:hover:bg-blue-800 transition-colors">
           + Добавить реагент
         </button>
       </div>
@@ -54,23 +54,23 @@ function ChemicalsPage() {
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full leading-normal">
           <thead>
-            <tr>
-              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Название</th>
-              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Ед. изм.</th>
-              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase">Описание</th>
-              <th className="px-5 py-3 border-b-2 text-right text-xs font-semibold uppercase">Функции</th>
+            <tr className='dark:bg-neutral-700'>
+              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-gray-100">Название</th>
+              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-gray-100">Ед. изм.</th>
+              <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-gray-100">Описание</th>
+              <th className="px-5 py-3 border-b-2 text-right text-xs font-semibold uppercase dark:text-gray-100">Функции</th>
 
             </tr>
           </thead>
           <tbody>
             {chemicals.map((chem) => (
-              <tr key={chem.id}>
-                <td className="px-5 py-5 border-b text-sm">{chem.name}</td>
-                <td className="px-5 py-5 border-b text-sm">{chem.unit_of_measurement}</td>
-                <td className="px-5 py-5 border-b text-sm">{chem.description}</td>
+              <tr key={chem.id} className='dark:bg-gray-700'>
+                <td className="px-5 py-5 border-b text-sm dark:text-gray-100">{chem.name}</td>
+                <td className="px-5 py-5 border-b text-sm dark:text-gray-100">{chem.unit_of_measurement}</td>
+                <td className="px-5 py-5 border-b text-sm dark:text-gray-100">{chem.description}</td>
                 <td className="px-5 py-5 border-b text-sm text-right">
-                                    <button onClick={() => openEditModal(chem)} className="text-indigo-600 hover:text-indigo-900 mr-4">Редактировать</button>
-                                    <button onClick={() => handleDelete(chem.id)} className="text-red-600 hover:text-red-900">Удалить</button>
+                                    <button onClick={() => openEditModal(chem)} className="text-indigo-600 hover:text-indigo-900 mr-4 dark:text-green-400 dark:hover:text-green-600">Редактировать</button>
+                                    <button onClick={() => handleDelete(chem.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-600">Удалить</button>
                 </td>
               </tr>
             ))}

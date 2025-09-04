@@ -31,18 +31,18 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
     };
     return (
         <form onSubmit={handleSubmit}>
-            <h3 className="text-xl font-semibold mb-6">
+            <h3 className="text-xl font-semibold mb-6 dark:text-gray-100">
                 {chemical ? 'Редактирование реагента' : 'Новый реагент'}
             </h3>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <div className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Название</label>
-                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm"/>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Название</label>
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} required className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm dark:bg-gray-600 dark:text-gray-100 dark:border-neutral-500"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Единица измерения</label>
-                    <select value={unit} onChange={e => setUnit(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Единица измерения</label>
+                    <select value={unit} onChange={e => setUnit(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm dark:bg-gray-600 dark:text-gray-100 dark:border-neutral-500">
                         <option>кг</option>
                         <option>л</option>
                         <option>шт</option>
@@ -50,8 +50,8 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700">Описание</label>
-                    <textarea value={desc} onChange={e => setDesc(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm"></textarea>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Описание</label>
+                    <textarea value={desc} onChange={e => setDesc(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm dark:bg-gray-600 dark:text-gray-100 dark:border-neutral-500"></textarea>
                 </div>
             </div>
             <div className="mt-6 flex justify-end space-x-3">
