@@ -33,7 +33,7 @@ function RequisitionsPage() {
                 <h1 className="text-3xl font-bold dark:text-white">Реестр заявок</h1>
                 <Link 
                     to="/requisitions/new" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md dark:bg-blue-600 dark:hover:bg-blue-800 transition-colors"
                 >
                     + Создать заявку
                 </Link>
@@ -41,16 +41,16 @@ function RequisitionsPage() {
 
             <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
                 <table className="min-w-full leading-normal">
-                    <thead className='bg-gray-50 dark:bg-gray-700'>
-                        <tr>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Номер</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Статус</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Объект</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Дата поставки</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Автор</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Подана</th> {/* <-- Новая колонка */}
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Утверждена</th>
-                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:text-white dark:border-red-600">Позиций</th>
+                    <thead className='bg-gray-50 dark:bg-neutral-800'>
+                        <tr className='dark:text-white'>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase  dark:border-red-600">Номер</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Статус</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Объект</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Дата поставки</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Автор</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Подана</th> 
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Утверждена</th>
+                            <th className="px-5 py-3 border-b-2 text-left text-xs font-semibold uppercase dark:border-red-600">Позиций</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -59,7 +59,7 @@ function RequisitionsPage() {
                             return (
                                 <tr 
                                     key={req.id} 
-                                    className="hover:bg-gray-50 cursor-pointer dark:hover:bg-gray-600"
+                                    className="hover:bg-gray-50 cursor-pointer dark:hover:bg-neutral-500 dark:bg-gray-700 dark:text-gray-100"
                                     onClick={() => navigate(`/requisitions/${req.id}`)}
                                 >
                                     <td className="px-5 py-4 text-sm font-medium">Заявка №{req.id}</td>
