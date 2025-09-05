@@ -83,8 +83,7 @@ function FacilityDetailPage() {
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }}
-                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow"
-                >
+                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow md:px-1 md:py-1">
                     Провести операцию
                 </Link>
             </div>

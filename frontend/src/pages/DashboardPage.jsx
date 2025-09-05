@@ -68,7 +68,7 @@ function DashboardPage() {
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }} // Запоминаем, откуда пришли
-                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow"
+                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold md:py-2 md:px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow px-1 py-1"
                 >
                     Провести операцию
                 </Link>
