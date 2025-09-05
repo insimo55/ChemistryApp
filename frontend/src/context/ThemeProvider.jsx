@@ -11,15 +11,23 @@ export function ThemeProvider({ children }) {
 
     // 2. useEffect будет срабатывать при изменении `theme`
     useEffect(() => {
-        const root = window.document.documentElement; // Получаем <html> элемент
+    const root = window.document.documentElement;
+    const body = window.document.body;
 
-        root.classList.remove('light', 'dark'); // Сначала удаляем оба класса
-        root.classList.add(theme); // Добавляем текущий класс темы
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
 
-        // Сохраняем выбор в localStorage
-        localStorage.setItem('theme', theme);
-    }, [theme]); // Запускаем эффект, когда `theme` меняется
+    // фон для body
+    if (theme === 'dark') {
+        body.style.backgroundColor = '#000';
+        body.style.color = '#fff'; // чтобы текст был читаем
+    } else {
+        body.style.backgroundColor = '#fff';
+        body.style.color = '#000';
+    }
 
+    localStorage.setItem('theme', theme);
+}, [theme]);
     // Функция для переключения темы
     const toggleTheme = () => {
         setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
