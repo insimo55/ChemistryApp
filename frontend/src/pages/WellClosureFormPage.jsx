@@ -215,10 +215,10 @@ function WellClosureFormPage() {
                                         </select>
                                     </td>
                                     <td className="p-2">
-                                        <input type="number" step="0.01" value={item.actual_quantity} onChange={e => handleItemChange(index, 'actual_quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:bg-gray-700"/>
+                                        <input type="number" step="0.01" value={item.actual_quantity} onChange={e => handleItemChange(index, 'actual_quantity', e.target.value)} required className="w-full p-2 border rounded text-left dark:bg-gray-700"/>
                                     </td>
                                     <td className="p-2">
-                                        <input type="number" step="0.01" value={item.closed_quantity} onChange={e => handleItemChange(index, 'closed_quantity', e.target.value)} required className="w-full p-2 border rounded text-right dark:bg-gray-700"/>
+                                        <input type="number" step="0.01" value={item.closed_quantity} onChange={e => handleItemChange(index, 'closed_quantity', e.target.value)} required className="w-full p-2 border rounded text-left dark:bg-gray-700"/>
                                     </td>
                                     <td className="p-2 text-center">
                                         <button type="button" onClick={() => removeItem(index)} title="Удалить позицию" className="text-red-500 hover:text-red-700 text-2xl font-bold">&times;</button>
