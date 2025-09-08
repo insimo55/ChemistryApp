@@ -101,7 +101,7 @@ function WellClosuresPage() {
             name="bush_number"
             value={filters.bush_number}
             onChange={handleFilterChange}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700 "
           />
         </div>
         <div>
@@ -110,7 +110,7 @@ function WellClosuresPage() {
             name="well_number"
             value={filters.well_number}
             onChange={handleFilterChange}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700"
           />
         </div>
         <div>
@@ -119,7 +119,7 @@ function WellClosuresPage() {
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700"
           >
             <option value="">Все</option>
             <option value="open">Не закрыта</option>
@@ -134,7 +134,7 @@ function WellClosuresPage() {
             name="start_date"
             value={filters.start_date}
             onChange={handleFilterChange}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700"
           />
         </div>
         <div>
@@ -144,7 +144,7 @@ function WellClosuresPage() {
             name="end_date"
             value={filters.end_date}
             onChange={handleFilterChange}
-            className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700"
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700"
           />
         </div>
         <button
@@ -156,9 +156,9 @@ function WellClosuresPage() {
       </div>
 
       {/* Таблица */}
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-black shadow-md rounded-lg overflow-hidden transition-colors">
         <table className="min-w-full leading-normal">
-          <thead className="bg-gray-100 dark:bg-gray-700">
+          <thead className="bg-gray-300 dark:bg-gray-700">
             <tr>
               <th className="px-5 py-3 text-left">Куст / Скважина</th>
               <th className="px-5 py-3 text-left">Период работ</th>
@@ -177,7 +177,7 @@ function WellClosuresPage() {
                 >
                   <td className="px-5 py-4">
                     <p className="font-semibold">{closure.bush_number}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-300">
                       {closure.well_number}
                     </p>
                   </td>

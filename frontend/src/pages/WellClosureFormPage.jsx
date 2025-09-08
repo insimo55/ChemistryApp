@@ -193,18 +193,25 @@ function WellClosureFormPage() {
                         <thead className="bg-gray-200 dark:bg-neutral-600 dark:border-gray-700">
                             <tr>
                                 <th className="p-3 w-2/5 text-left text-xs font-semibold text-black uppercase dark:text-gray-100">Реагент</th>
-                                <th className="p-3 w-1/4 text-right text-xs font-semibold text-black uppercase dark:text-gray-100">Фактический расход</th>
-                                <th className="p-3 w-1/4 text-right text-xs font-semibold text-black uppercase dark:text-gray-100">Закрытое количество</th>
+                                <th className="p-3 w-1/4 text-right text-xs font-semibold text-black uppercase dark:text-gray-100">Фактический расход, кг</th>
+                                <th className="p-3 w-1/4 text-right text-xs font-semibold text-black uppercase dark:text-gray-100">Закрытое количество, кг</th>
                                 <th className="p-3 w-auto"></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {closure.items.map((item, index) => (
-                                <tr key={item.id}>
+                                <tr key={item.id} className='border-none'>
                                     <td className="p-2">
                                         <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="w-full p-2 border rounded dark:bg-gray-700">
                                             <option value="">Выберите...</option>
-                                            {chemicals.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                                            {chemicals
+                                                    .slice()
+                                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                                    .map(c => (
+                                                    <option key={c.id} value={c.id}>
+                                                        {c.name}
+                                                    </option>
+                                                    ))}
                                         </select>
                                     </td>
                                     <td className="p-2">

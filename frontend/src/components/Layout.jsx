@@ -114,7 +114,7 @@ function Layout() {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 p-10 bg-gray-100 dark:bg-neutral-950 md:ml-64 mt-14 md:mt-0">
+      <main className="flex-1 p-10 bg-gray-100 dark:bg-neutral-950 md:ml-64 mt-14 md:mt-0 transition-colors duration-300">
         <Outlet />
       </main>
     </div>
