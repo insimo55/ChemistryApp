@@ -18,6 +18,8 @@ import UsersPage from './pages/UsersPage';
 import NewOperationPage from './pages/NewOperationPage';
 import RequisitionsPage from './pages/RequisitionsPage';
 import RequisitionFormPage from './pages/RequisitionFormPage'; 
+import WellClosuresPage from './pages/WellClosuresPage'; 
+import WellClosureFormPage from './pages/WellClosureFormPage';
 
 // Заглушка для страницы управления пользователями (пока не создали)
 
@@ -84,6 +86,12 @@ function App() {
           {/* Роуты для админов и логистов. Можно обернуть их в общий защитный роут, если нужно. */}
           <Route path="chemicals" element={<ChemicalsPage />} />
           <Route path="facilities-admin" element={<FacilitiesAdminPage />} />
+          <Route 
+            path="well-closures" 
+            element={<AdminRoute><WellClosuresPage /></AdminRoute>} 
+          />
+          <Route path="well-closures/new" element={<AdminRoute><WellClosureFormPage /></AdminRoute>} /> {/* <-- ДЛЯ СОЗДАНИЯ */}
+          <Route path="well-closures/:id" element={<AdminRoute><WellClosureFormPage /></AdminRoute>} /> {/* <-- ДЛЯ РЕДАКТИРОВАНИЯ */}
 
           
           {/* Страница управления пользователями, доступная только админу */}

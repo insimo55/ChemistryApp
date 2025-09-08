@@ -70,15 +70,16 @@ function Layout() {
           <SidebarLink to="/">Главная (Объекты)</SidebarLink>
           <SidebarLink to="/transactions">История операций</SidebarLink>
           <SidebarLink to="/new-operation">Провести операцию</SidebarLink>
-          <SidebarLink to="/requisitions">Заявки</SidebarLink>
 
           {(user?.role === "admin" || user?.role === "logistician") && (
             <>
               <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-400 uppercase">
                 Справочники
               </div>
+              <SidebarLink to="/requisitions">Заявки</SidebarLink>
               <SidebarLink to="/chemicals">Реагенты</SidebarLink>
               <SidebarLink to="/facilities-admin">Объекты (Админ)</SidebarLink>
+              <SidebarLink to="/well-closures">Закрытие скважин</SidebarLink>
             </>
           )}
 

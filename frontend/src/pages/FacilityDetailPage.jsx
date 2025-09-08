@@ -94,11 +94,11 @@ function FacilityDetailPage() {
                 <div className="flex flex-wrap items-end gap-4">
                     <div>
                         <label htmlFor="start-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">С даты</label>
-                        <input id="start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full"/>
+                        <input id="start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full dark:bg-gray-700"/>
                     </div>
                     <div>
                         <label htmlFor="end-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">По дату</label>
-                        <input id="end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full"/>
+                        <input id="end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full dark:bg-gray-700"/>
                     </div>
                     {/* Кнопка "Обновить" теперь не нужна, так как отчет обновляется автоматически при смене дат */}
                 </div>
