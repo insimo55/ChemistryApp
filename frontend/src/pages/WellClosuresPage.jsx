@@ -176,9 +176,9 @@ function WellClosuresPage() {
                   onClick={() => navigate(`/well-closures/${closure.id}`)}
                 >
                   <td className="px-5 py-4">
-                    <p className="font-semibold">{closure.bush_number}</p>
+                    <p className="font-semibold">Куст: {closure.bush_number}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-300">
-                      {closure.well_number}
+                      Скважина: {closure.well_number}
                     </p>
                   </td>
                   <td className="px-5 py-4 text-sm">
