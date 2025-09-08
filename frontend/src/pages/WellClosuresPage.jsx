@@ -187,7 +187,7 @@ function WellClosuresPage() {
                   </td>
                   <td className="px-5 py-4 text-center">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${statusInfo.bg} ${statusInfo.text_color}`}
+                      className={`px-2 py-1 rounded-full text-s font-semibold ${statusInfo.bg} ${statusInfo.text_color}`}
                     >
                       {statusInfo.text}
                     </span>
