@@ -73,6 +73,8 @@ function Layout() {
 
           {(user?.role === "admin" || user?.role === "logistician") && (
             <>
+              <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-400 uppercase">Отчеты</div>
+              <SidebarLink to="/reports/consumption">Сводный расход</SidebarLink>
               <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-400 uppercase">
                 Справочники
               </div>
