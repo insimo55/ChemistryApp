@@ -41,7 +41,7 @@ const ActionButton = ({ onClick, text, color = 'blue', disabled = false, title =
 function RequisitionActionButtons({ requisition, onStatusChange }) {
     const { user } = useAuthStore();
      // --- ДОБАВЬТЕ ЭТОТ ЛОГ ---
-    console.log("ActionButtons: Получены пропсы", { requisition, user });
+    // console.log("ActionButtons: Получены пропсы", { requisition, user });
     if (!requisition || !user){
          console.log("ActionButtons: Рендер отменен, так как requisition или user отсутствуют.");
      return null;
