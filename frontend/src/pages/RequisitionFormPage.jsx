@@ -247,36 +247,36 @@ setError('');
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6 pb-6 border-b">
                     <div>
                         <label htmlFor="req_number" className="block text-sm font-medium">Номер заявки</label>
-                        <input id="req_number" name="req_number" type="text" value={requisition.req_number} onChange={handleHeaderChange} required className="mt-1 block w-full p-2 border rounded"/>
+                        <input id="req_number" name="req_number" type="text" value={requisition.req_number} onChange={handleHeaderChange} required className="mt-1 block w-full p-2 border rounded dark:bg-gray-600"/>
                     </div>
                     <div>
                         <label htmlFor="target_facility" className="block text-sm font-medium dark:text-white">Объект назначения</label>
-                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-black dark:border-black">
+                        <select id="target_facility" name="target_facility" value={requisition.target_facility} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-gray-600">
                             <option value="">Выберите объект...</option>
                             {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                         </select>
                     </div>
                     <div>
                         <label htmlFor="required_date" className="block text-sm font-medium dark:text-white ">Желаемая дата поставки</label>
-                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-black dark:border-black"/>
+                        <input id="required_date" name="required_date" type="date" value={requisition.required_date} onChange={handleHeaderChange} required disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-gray-600"/>
                     </div>
                     <div>
                         <label htmlFor="status" className="block text-sm font-medium dark:text-white">Статус</label>
-                        <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100 dark:text-white dark:bg-black dark:border-black"/>
+                        <input id="status" type="text" value={statusStyles[requisition.status]?.text || 'Неизвестно'} readOnly disabled className="mt-1 block w-full p-2 border rounded bg-gray-100 dark:text-white dark:bg-gray-600"/>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Утвердил</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Утвердил</label>
                         <input 
                             type="text"
                             value={requisition.approved_by_username || 'Ожидает утверждения'}
                             readOnly
                             disabled
-                            className="mt-1 block w-full p-2 border rounded bg-gray-100"
+                            className="mt-1 block w-full p-2 border rounded bg-gray-100 dark:bg-gray-600"
                         />
                     </div>
                     <div className="md:col-span-2 lg:col-span-3">
-                         <label htmlFor="comment" className="block text-sm font-medium dark:text-white">Комментарий</label>
-                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-white dark:bg-black dark:border-black"></textarea>
+                         <label htmlFor="comment" className="block text-sm font-medium dark:text-gray-100 ">Комментарий</label>
+                         <textarea id="comment" name="comment" value={requisition.comment} onChange={handleHeaderChange} rows="3" disabled={!isEditable} className="mt-1 block w-full p-2 border rounded disabled:bg-gray-100 disabled:cursor-not-allowed dark:text-gray-100 dark:bg-gray-600"></textarea>
                     </div>
                 </div>
 
@@ -290,7 +290,7 @@ setError('');
                             <div key={item.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end border p-3 rounded-md bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-medium text-gray-600 dark:text-gray-300">Реагент</label>
-                                    <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="mt-1 block w-full p-2 border rounded">
+                                    <select value={item.chemical} onChange={e => handleItemChange(index, 'chemical', e.target.value)} required className="mt-1 block w-full p-2 border rounded dark:bg-gray-600">
                                         <option value="">Выберите...</option>
                                         {chemicals
                                                     .slice()
@@ -304,8 +304,8 @@ setError('');
                                 </div>
                                 <div className="flex items-end space-x-2">
                                     <div className="flex-grow">
-                                        <label className="block text-xs font-medium text-gray-600 dark:text-gray-300">Общее количество, кг</label>
-                                        <input type="number" step="1" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="mt-1 block w-full p-2 border rounded text-left"/>
+                                        <label className="block text-xs font-medium text-gray-600 dark:text-gray-300 ">Общее количество, кг</label>
+                                        <input type="number" step="1" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} required className="mt-1 block w-full p-2 border rounded text-left dark:bg-gray-600"/>
                                     </div>
                                     {requisition.items.length > 1 && (
                                         <button type="button" onClick={() => removeItem(index)} title="Удалить позицию" className="h-10 w-10 flex-shrink-0 text-red-500 hover:text-red-700 text-2xl">&times;</button>
@@ -334,7 +334,7 @@ setError('');
 
                                     return (
                                         <tr key={item.id}>
-                                            <td className="p-2 w-1/3 dark:text-white">{item.chemical_name || '...'}</td>
+                                            <td className="p-2 w-1/3 dark:text-white ">{item.chemical_name || '...'}</td>
                                             <td className="p-2 w-1/4 text-right dark:text-white">{item.quantity}</td>
                                             <td className="p-2 w-1/6 text-right font-medium dark:text-white">{item.received_quantity || 0}</td>
                                             <td className="p-2 text-center">
@@ -389,13 +389,13 @@ setError('');
                     })}
                 </div>
                     {isEditable && (
-                        <div className="mb-6 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-                            <label htmlFor="add-facility-dist" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Добавить объект в распределение</label>
+                        <div className="mb-6 p-3 bg-blue-50 dark:bg-gray-600 rounded-md">
+                            <label htmlFor="add-facility-dist" className="block text-sm font-medium text-gray-700 dark:text-gray-200 ">Добавить объект в распределение</label>
                             <select 
                                 id="add-facility-dist" 
                                 onChange={(e) => addFacilityToDistribution(e.target.value)} 
                                 value=""
-                                className="mt-1 p-2 border rounded w-full md:w-1/2"
+                                className="mt-1 p-2 border rounded w-full md:w-1/2 dark:bg-gray-600"
                             >
                                 <option value="" disabled>Выберите объект...</option>
                                 {facilities.map(f => (

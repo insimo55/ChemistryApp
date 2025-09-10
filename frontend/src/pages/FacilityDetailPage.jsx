@@ -111,19 +111,19 @@ function FacilityDetailPage() {
                     <h4 className="font-semibold mb-2 text-blue-800 dark:text-blue-400">Итого за период:</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                         <div>
-                            <div className="text-sm text-gray-600 dark:text-gray-200">Начальный остаток</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-200">Начальный остаток, кг</div>
                             <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.opening_balance}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-green-700 dark:text-green-400">Приход</div>
+                            <div className="text-sm text-green-700 dark:text-green-400">Приход, кг</div>
                             <div className="text-xl font-bold text-green-700 dark:text-green-400">+{reportData.summary.income}</div>
                         </div>
                         <div>
-                            <div className="text-sm text-red-700 dark:text-red-500">Расход</div>
+                            <div className="text-sm text-red-700 dark:text-red-500">Расход, кг</div>
                             <div className="text-xl font-bold text-red-700 dark:text-red-500">-{reportData.summary.outcome}</div>
                         </div>
                          <div>
-                            <div className="text-sm text-gray-600 dark:text-gray-200">Конечный остаток</div>
+                            <div className="text-sm text-gray-600 dark:text-gray-200">Конечный остаток, кг</div>
                             <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.closing_balance}</div>
                         </div>
                     </div>
@@ -134,23 +134,23 @@ function FacilityDetailPage() {
             <h2 className="text-2xl font-semibold mb-4 dark:text-gray-100">Детализация по реагентам</h2>
             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50 dark:bg-neutral-700 dark:border-neutral-700">
+                    <thead className="bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700">
                         <tr>
                             <th className="p-3 text-left text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Реагент</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Нач. остаток</th>
-                            <th className="p-3 text-right text-xs font-semibold text-green-600 uppercase dark:text-green-400">Приход</th>
-                            <th className="p-3 text-right text-xs font-semibold text-red-600 uppercase dark:text-red-500">Расход</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Кон. остаток</th>
+                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Нач. остаток, кг</th>
+                            <th className="p-3 text-right text-xs font-semibold text-green-600 uppercase dark:text-green-400">Приход, кг</th>
+                            <th className="p-3 text-right text-xs font-semibold text-red-600 uppercase dark:text-red-500">Расход, кг</th>
+                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Кон. остаток, кг</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                         {reportData?.details.slice().sort((a, b) => a.chemical_name.localeCompare(b.chemical_name)).map((item) => (
-                            <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer dark:bg-neutral-600 dark:hover:bg-neutral-500" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
+                            <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer dark:bg-gray-700 dark:hover:bg-neutral-600" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
                                 <td className="p-3 whitespace-nowrap dark:text-gray-200">{item.chemical_name} <span className="text-xs text-gray-400 dark:text-neutral-300">({item.unit})</span></td>
                                 <td className="p-3 whitespace-nowrap text-right font-mono dark:text-gray-100">{item.opening_balance}</td>
                                 <td className="p-3 whitespace-nowrap text-right font-mono text-green-600 dark:text-green-400">+{item.income}</td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono text-red-600 dark:text-red-600">-{item.outcome}</td>
-                                <td className={`p-3 whitespace-nowrap text-right font-mono font-bold dark:text-gray-100 ${parseFloat(item.closing_balance) < 0 ? 'text-red-600' : ''}`}>{item.closing_balance}</td>
+                                <td className="p-3 whitespace-nowrap text-right font-mono text-red-600 dark:text-red-300">-{item.outcome}</td>
+                                <td className={`p-3 whitespace-nowrap text-right font-mono font-bold dark:font-normal dark:text-gray-100 ${parseFloat(item.closing_balance) < 0 ? 'text-red-600' : ''}`}>{item.closing_balance}</td>
                             </tr>
                         ))}
                          {(!reportData?.details || reportData?.details.length === 0) && !loading && (

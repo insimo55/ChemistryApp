@@ -57,10 +57,10 @@ function RequisitionsPage() {
                 </Link>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+            <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end dark:bg-neutral-700">
                 <div>
                     <label className="block text-sm">Статус</label>
-                    <select name="status" value={filters.status} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md">
+                    <select name="status" value={filters.status} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700 dark:border-white dark:border">
                         <option value="">Все</option>
                         {Object.entries(statusStyles).map(([key, value]) => (
                             value.text !== 'Неизвестно' && <option key={key} value={key}>{value.text}</option>
@@ -69,7 +69,7 @@ function RequisitionsPage() {
                 </div>
                 <div>
                     <label className="block text-sm">Объект</label>
-                    <select name="target_facility" value={filters.target_facility} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md">
+                    <select name="target_facility" value={filters.target_facility} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md dark:bg-gray-700 dark:border-white dark:border">
                         <option value="">Все</option>
                         {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                     </select>
@@ -94,7 +94,7 @@ function RequisitionsPage() {
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700"
                     />
                 </div>
-                <button onClick={resetFilters} className="bg-gray-200 p-2 rounded-md">Сбросить</button>
+                <button onClick={resetFilters} className="bg-gray-200 p-2 rounded-md dark:bg-gray-500 transition dark:hover:bg-gray-700">Сбросить</button>
             </div>
 
 

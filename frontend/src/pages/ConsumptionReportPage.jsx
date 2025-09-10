@@ -103,38 +103,39 @@ function ConsumptionReportPage() {
             <h1 className="text-3xl font-bold mb-6">Сводный отчет по расходу</h1>
             
             {/* --- ПАНЕЛЬ ФИЛЬТРОВ --- */}
-            <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-                <div className="lg:col-span-2">
-                    <label className="block text-sm">Объекты</label>
+            <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end dark:bg-neutral-700">
+                <div className="lg:col-span-2 ">
+                    <label className="block text-sm ">Объекты</label>
                     <Select
                         isMulti
                         options={facilities}
                         value={filters.selectedFacilities}
                         onChange={handleFacilitiesChange} 
+                        className=' dark:text-black dark:bg-black'
                     />
                 </div>
                 <div>
                     <label className="block text-sm">С даты</label>
-                    <input type="date" name="startDate" value={filters.startDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded"/>
+                    <input type="date" name="startDate" value={filters.startDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded dark:text-black"/>
                 </div>
                  <div>
                     <label className="block text-sm">По дату</label>
-                    <input type="date" name="endDate" value={filters.endDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded"/>
+                    <input type="date" name="endDate" value={filters.endDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded dark:text-black"/>
                 </div>
                 
             </div>
 
             {/* --- ТАБЛИЦА С РЕЗУЛЬТАТОМ --- */}
-            <div className="bg-white shadow-md rounded-lg">
-                <table className="min-w-full">
-                    <thead className="bg-gray-50">
+            <div className="bg-white shadow-md rounded-lg ">
+                <table className="min-w-full dark:bg-neutral-700">
+                    <thead className="bg-gray-50 dark:bg-neutral-700">
                         <tr>
                             <th className="p-3 text-left">Реагент</th>
                             <th className="p-3 text-right">Суммарный расход</th>
                             <th className="p-3 text-left">Ед. изм.</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y">
+                    <tbody className="divide-y dark:bg-gray-600">
                         {reportData.map(item => (
                             <tr key={item.name}>
                                 <td className="p-3">{item.name}</td>
