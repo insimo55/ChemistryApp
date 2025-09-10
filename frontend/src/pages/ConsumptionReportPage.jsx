@@ -1,51 +1,66 @@
 // frontend/src/pages/ConsumptionReportPage.jsx
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../api';
-// Можно использовать мульти-селект компонент для удобства, например, react-select
-// npm install react-select
 import Select from 'react-select';
 
 function ConsumptionReportPage() {
-    // --- СОСТОЯНИЯ ---
-    const [reportData, setReportData] = useState([]); // Сводные данные
+    const [reportData, setReportData] = useState([]);
     const [loading, setLoading] = useState(false);
     
-    // Фильтры
-    const [selectedFacilities, setSelectedFacilities] = useState([]);
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    // Фильтры, которые меняются мгновенно
+    const [filters, setFilters] = useState({
+        selectedFacilities: [],
+        startDate: '',
+        endDate: '',
+    });
     
-    // Справочники
+    // Фильтры, которые используются для запроса (с задержкой)
+    const [debouncedFilters, setDebouncedFilters] = useState(filters);
+    
     const [facilities, setFacilities] = useState([]);
 
-    // Загрузка справочника объектов
+    // Загрузка справочника
     useEffect(() => {
-        apiClient.get('/api/facilities/').then(res => {
-            // Преобразуем для react-select
+        apiClient.get('/facilities/').then(res => {
             const options = (res.data.results || res.data).map(f => ({ value: f.id, label: f.name }));
             setFacilities(options);
         });
     }, []);
 
-    // Функция для загрузки и обработки данных
-    const handleGenerateReport = async () => {
+    // Эффект для "debounce"
+    useEffect(() => {
+        const timer = setTimeout(() => setDebouncedFilters(filters), 500);
+        return () => clearTimeout(timer);
+    }, [filters]);
+
+    // Функция загрузки данных, зависит от "отложенных" фильтров
+    const generateReport = useCallback(async () => {
+        const { selectedFacilities, startDate, endDate } = debouncedFilters;
+        
         if (selectedFacilities.length === 0 || !startDate || !endDate) {
-            alert("Выберите хотя бы один объект и укажите период.");
+            setReportData([]);
             return;
         }
+        
         setLoading(true);
         try {
-            // Формируем параметры запроса
             const params = new URLSearchParams();
-            selectedFacilities.forEach(f => params.append('from_facility', f.value));
+            
+            // По-прежнему ищем по `from_facility`, чтобы найти расход с нужных объектов
+            selectedFacilities.forEach(f => params.append('facility_outcome', f.value)); 
+            
             params.append('start_date', `${startDate}T00:00:00`);
             params.append('end_date', `${endDate}T23:59:59`);
-            params.append('transaction_type', 'consume'); // Нас интересует только расход
+            
+            // --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+            // Теперь запрашиваем ТОЛЬКО транзакции типа 'consume'
+            params.append('transaction_type', 'consume');
+            // Строку с 'transfer' мы удалили
 
-            const response = await apiClient.get(`/api/transactions/?${params.toString()}`);
+            const response = await apiClient.get(`/transactions/?${params.toString()}`);
             const transactions = response.data.results || response.data;
             
-            // --- АГРЕГАЦИЯ НА ФРОНТЕНДЕ ---
+            // Агрегация остается той же, но теперь она будет работать с правильными данными
             const summary = {};
             transactions.forEach(tx => {
                 const chemId = tx.chemical.id;
@@ -59,7 +74,6 @@ function ConsumptionReportPage() {
                 summary[chemId].total_quantity += parseFloat(tx.quantity);
             });
             
-            // Преобразуем в массив и сортируем
             const sortedReport = Object.values(summary).sort((a, b) => a.name.localeCompare(b.name));
             setReportData(sortedReport);
 
@@ -68,6 +82,20 @@ function ConsumptionReportPage() {
         } finally {
             setLoading(false);
         }
+    }, [debouncedFilters]);
+
+    // Запускаем отчет, когда "отложенные" фильтры изменились
+    useEffect(() => {
+        generateReport();
+    }, [generateReport]);
+
+    // Обработчики для полей
+    const handleFacilitiesChange = (selectedOptions) => {
+        setFilters(prev => ({...prev, selectedFacilities: selectedOptions || [] }));
+    };
+    const handleDateChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({...prev, [name]: value }));
     };
 
     return (
@@ -81,22 +109,19 @@ function ConsumptionReportPage() {
                     <Select
                         isMulti
                         options={facilities}
-                        value={selectedFacilities}
-                        onChange={setSelectedFacilities}
-                        placeholder="Выберите один или несколько объектов..."
+                        value={filters.selectedFacilities}
+                        onChange={handleFacilitiesChange} 
                     />
                 </div>
                 <div>
                     <label className="block text-sm">С даты</label>
-                    <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 w-full p-2 border rounded"/>
+                    <input type="date" name="startDate" value={filters.startDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded"/>
                 </div>
                  <div>
                     <label className="block text-sm">По дату</label>
-                    <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 w-full p-2 border rounded"/>
+                    <input type="date" name="endDate" value={filters.endDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded"/>
                 </div>
-                <button onClick={handleGenerateReport} disabled={loading} className="bg-blue-600 text-white p-2 rounded w-full lg:w-auto">
-                    {loading ? 'Загрузка...' : 'Сформировать'}
-                </button>
+                
             </div>
 
             {/* --- ТАБЛИЦА С РЕЗУЛЬТАТОМ --- */}
