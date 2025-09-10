@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo, useCallback  } from 'react';
 import apiClient from '../api';
 import Modal from '../components/Modal'; // Наше универсальное модальное окно
 import OperationDetail from '../components/OperationDetail'; // Новый компонент для деталей
+import { statusStyles } from '../utils/styleHelpers';
 
 function TransactionsPage() {
   const [transactions, setTransactions] = useState([]); // "Сырые" данные с бэкенда
@@ -12,81 +13,63 @@ function TransactionsPage() {
 
   // Состояния для фильтров
   const [filters, setFilters] = useState({
-    from_facility: '',
-    to_facility: '',
-    transaction_type: '',
-    start_date: '',
-    end_date: '',
-  });
+        facility: '', // <-- Изменили имя
+        transaction_type: '',
+        start_date: '',
+        end_date: '',
+    });
 
- // Состояния для выпадающих списков в фильтрах
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+    
   const [facilities, setFacilities] = useState([]);
 
 
-   useEffect(() => {
-    const fetchFacilities = async () => {
-      try {
-        const facRes = await apiClient.get('/facilities/');
-        setFacilities(facRes.data);
-      } catch (err) {
-        console.error("Failed to load facilities for filters", err);
-      }
-    };
-    fetchFacilities();
-  }, []);
+   // Загрузка справочников (один раз)
+    useEffect(() => {
+        apiClient.get('/facilities/').then(res => {
+            setFacilities(res.data.results || res.data);
+        });
+    }, []); // <-- Пустой массив зависимостей
 
-   const fetchTransactions = useCallback(async () => {
-    try {
-      setLoading(true);
-      // Формируем параметры запроса из состояния фильтров
-      const params = new URLSearchParams();
-      // Добавляем в запрос только те фильтры, у которых есть значение
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) {
-                    // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-                    if (key === 'start_date') {
-                        // Добавляем время "начало дня"
-                        params.append(key, `${value}T00:00:00`);
-                    } else if (key === 'end_date') {
-                        // Добавляем время "конец дня"
-                        params.append(key, `${value}T23:59:59`);
-                    } else {
-                        params.append(key, value);
-                    }
+    // Эффект для debounce
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedFilters(filters);
+        }, 500); // 500 мс задержка
+        return () => clearTimeout(timer);
+    }, [filters]);
+
+    // Загрузка транзакций (зависит от debouncedFilters)
+    useEffect(() => {
+        setLoading(true);
+        const params = new URLSearchParams();
+        // Формируем параметры из "отложенных" фильтров
+        Object.entries(debouncedFilters).forEach(([key, value]) => {
+            if (value) {
+                if (key === 'start_date') {
+                    params.append(key, `${value}T00:00:00`);
+                } else if (key === 'end_date') {
+                    params.append(key, `${value}T23:59:59`);
+                } else {
+                    params.append(key, value);
                 }
-      });
-      
-      const response = await apiClient.get(`/transactions/?${params.toString()}`);
-      setTransactions(response.data);
-    } catch (err) {
-      console.error("Failed to fetch transactions:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [filters]); // Зависимость от объекта filters
-
-  // Загружаем транзакции при первом рендере и при изменении фильтров
-  useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
+            }
+        });
+        
+        apiClient.get(`/transactions/?${params.toString()}`)
+            .then(res => setTransactions(res.data.results || res.data))
+            .catch(err => console.error("Failed to fetch transactions:", err))
+            .finally(() => setLoading(false));
+    }, [debouncedFilters]);
 
   const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
-  };
-  const handleActionSuccess = () => {
-    setSelectedOperation(null);
-    fetchTransactions();
-  };
+        const { name, value } = e.target;
+        setFilters(prev => ({ ...prev, [name]: value }));
+    };
+  
   const resetFilters = () => {
-    setFilters({
-      from_facility: '',
-      to_facility: '',
-      transaction_type: '',
-      start_date: '',
-      end_date: '',
-    });
-  };
+        setFilters({ facility: '', transaction_type: '', start_date: '', end_date: '' });
+    };
   // Группируем транзакции по operation_uuid. Эта логика остается, она идеальна для нашей задачи.
   const groupedOperations = useMemo(() => {
     // 1. Проверка на пустой массив для избежания ошибок
@@ -126,6 +109,11 @@ function TransactionsPage() {
 
   }, [transactions]);
 
+  const handleActionSuccess = () => {
+    setSelectedOperation(null);
+    fetchTransactions();
+  };
+
   if (loading) return <p>Загрузка истории операций...</p>;
 
   
@@ -145,7 +133,7 @@ function TransactionsPage() {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Объект (Откуда/Куда)</label>
-          <select name="from_facility" value={filters.from_facility} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm dark:bg-gray-700">
+          <select name="facility" value={filters.facility} onChange={handleFilterChange} className="mt-1 block w-full p-2 border-gray-300 rounded-md shadow-sm dark:bg-gray-700">
             <option value="">Любой</option>
             {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
           </select>
