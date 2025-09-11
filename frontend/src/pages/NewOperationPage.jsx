@@ -355,8 +355,8 @@ function NewOperationPage() {
                                 </div>
                             </div>
                             <div className="relative w-1/3">
-                                <label className="text-xs text-gray-500 dark:text-gray-100">Количество</label>
-                                <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во" className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700" />
+                                <label className="text-xs text-gray-500 dark:text-gray-100">Количество, кг</label>
+                                <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во в КГ" className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700" />
                                 {(transactionType === 'consume' || transactionType === 'transfer') && item.chemicalId && (
                                     <span className={`absolute -bottom-5 right-0 text-xs ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500' : 'text-red-500 font-semibold'}`}>
                                         {stockQuantity !== null ? `В наличии: ${stockQuantity}` : 'Нет в наличии'}
