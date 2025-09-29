@@ -27,30 +27,30 @@ function OperationDetail({ items, onActionSuccess }) {
 
   return (
     <div className="p-2 max-w-2xl mx-auto">
-      <h3 className="text-xl font-semibold mb-4 text-gray-800">Детали операции</h3>
+      <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Детали операции</h3>
       
       {/* Секция с общей информацией */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 mb-6 text-sm">
-        <div><strong className="text-gray-500">Дата и время:</strong></div>
+        <div><strong className="text-gray-500 dark:text-gray-200">Дата и время:</strong></div>
         <div>{representative.operation_date ? new Date(representative.operation_date).toLocaleString('ru-RU') : 'Нет даты'}</div>
         
-        <div><strong className="text-gray-500">Тип операции:</strong></div>
+        <div><strong className="text-gray-500 dark:text-gray-200">Тип операции:</strong></div>
         <div className="capitalize">{representative.transaction_type}</div>
         
-        <div><strong className="text-gray-500">Из объекта:</strong></div>
+        <div><strong className="text-gray-500 dark:text-gray-200">Из объекта:</strong></div>
         <div>{representative.from_facility || '—'}</div>
         
-        <div><strong className="text-gray-500">В объект:</strong></div>
+        <div><strong className="text-gray-500 dark:text-gray-200">В объект:</strong></div>
         <div>{representative.to_facility || '—'}</div>
         
-        <div><strong className="text-gray-500">Исполнитель:</strong></div>
+        <div><strong className="text-gray-500 dark:text-gray-200">Исполнитель:</strong></div>
         <div>{representative.performed_by || '—'}</div>
       </div>
 
       {/* Комментарий и документ */}
       <div className="mb-6">
-        <strong className="block text-sm text-gray-500 mb-1">Комментарий:</strong>
-        <p className="text-sm bg-gray-50 p-3 rounded-md border">{representative.comment || 'Нет комментария.'}</p>
+        <strong className="block text-sm text-gray-500 mb-1 dark:text-gray-200">Комментарий:</strong>
+        <p className="text-sm bg-gray-50 p-3 rounded-md border dark:bg-neutral-600">{representative.comment || 'Нет комментария.'}</p>
         {documentUrl && (
             <div className="mt-4">
                 <a 
@@ -67,12 +67,12 @@ function OperationDetail({ items, onActionSuccess }) {
 
       {/* Список реагентов */}
       <div>
-        <strong className="block text-sm text-gray-500 mb-2">Список реагентов ({items.length} поз.):</strong>
+        <strong className="block text-sm text-gray-500 mb-2 dark:text-gray-200">Список реагентов ({items.length} поз.):</strong>
         <div className="border rounded-md divide-y">
           {items.map((item) => (
-            <div key={item.id} className="grid grid-cols-3 gap-4 p-3">
-              <div className="col-span-2 text-gray-800">{item.chemical.name}</div>
-              <div className="text-right font-mono text-gray-900">{item.quantity} {item.chemical.unit_of_measurement}</div>
+            <div key={item.id} className="grid grid-cols-3 gap-4 p-3 dark:bg-neutral-600">
+              <div className="col-span-2 text-gray-800 dark:text-gray-200">{item.chemical.name}</div>
+              <div className="text-right font-mono text-gray-900 dark:text-gray-200">{item.quantity} {item.chemical.unit_of_measurement}</div>
             </div>
           ))}
         </div>

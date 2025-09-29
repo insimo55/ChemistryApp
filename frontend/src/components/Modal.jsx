@@ -13,7 +13,7 @@ function Modal({ isOpen, onClose, children }) {
       onClick={onClose} // Закрытие по клику на фон
     >
       <div 
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative overflow-y-auto max-h-[70vh] dark:bg-neutral-800"
+        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative overflow-y-auto max-h-[70vh] dark:bg-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
         <button
