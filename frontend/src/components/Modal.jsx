@@ -9,16 +9,17 @@ function Modal({ isOpen, onClose, children }) {
   // e.stopPropagation() нужно, чтобы клик по самому окну не закрывал его
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center dark:bg-gray-600 dark:bg-opacity-45"
+      className="fixed inset-0 bg-black/50 dark:bg-black/70 z-50 flex justify-center items-center backdrop-blur-sm p-4"
       onClick={onClose} // Закрытие по клику на фон
     >
       <div 
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg relative overflow-y-auto max-h-[70vh] dark:bg-gray-700"
+        className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-2xl w-full max-w-lg relative overflow-y-auto max-h-[85vh] border border-gray-200 dark:border-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-2xl font-bold dark:text-gray-100"
+          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-200 text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Закрыть"
         >
           × {/* Крестик */}
         </button>

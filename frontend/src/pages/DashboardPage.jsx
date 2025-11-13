@@ -59,16 +59,16 @@ function DashboardPage() {
   // --- КОНЕЦ ОБНОВЛЕННОЙ ЛОГИКИ ---
 
 
-  if (loading) return <p>Загрузка объектов...</p>;
+  if (loading) return <p className="text-gray-900 dark:text-gray-100">Загрузка объектов...</p>;
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-                <h1 className="text-3xl font-bold dark:text-white">Объекты</h1>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-50">Объекты</h1>
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }} // Запоминаем, откуда пришли
-                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold md:py-2 md:px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition-shadow px-1 py-1"
+                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold md:py-2 md:px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-500 dark:hover:shadow-green-500/70 dark:hover:shadow-2xl transition-all px-1 py-1"
                 >
                     Провести операцию
                 </Link>
@@ -82,22 +82,22 @@ function DashboardPage() {
             <Link 
               key={facility.id} 
               to={`/facilities/${facility.id}`} 
-              className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow dark:bg-neutral-800 dark:hover:shadow-white"
+              className="block p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-all border border-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:border-blue-500/50 dark:hover:shadow-blue-500/40 dark:hover:shadow-2xl"
             >
-              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{facility.name}</h2>
+              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-50">{facility.name}</h2>
               <p className="text-gray-500 capitalize mb-4 dark:text-gray-400">{facility.type}</p>
               
               {/* --- ОБНОВЛЕННЫЙ ВЫВОД ДАННЫХ --- */}
               <div className="space-y-2">
-                <div className="flex items-center text-gray-700">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400 dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div className="flex items-center text-gray-700 dark:text-gray-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                   </svg>
                   <span className="font-semibold dark:text-gray-100">{totals.positionCount} {getNoun(totals.positionCount, 'позиция', 'позиции', 'позиций')}</span>
                 </div>
                 {totals.totalWeight > 0 && (
-                  <div className="flex items-center text-gray-700 ">
-                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <div className="flex items-center text-gray-700 dark:text-gray-200">
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-400 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                     </svg>
                     <span className="font-semibold dark:text-gray-100">

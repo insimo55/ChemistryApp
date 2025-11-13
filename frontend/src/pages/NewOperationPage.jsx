@@ -252,39 +252,39 @@ function NewOperationPage() {
         }
     };
 
-    if (loading && isEditMode) return <p>Загрузка операции...</p>;
+    if (loading && isEditMode) return <p className="text-gray-900 dark:text-gray-100">Загрузка операции...</p>;
 
      return (
         <div>
             <div className="flex items-center justify-between mb-4">
-                <button onClick={handleBack} className="text-blue-600 hover:underline font-semibold flex items-center dark:text-blue-400">
+                <button onClick={handleBack} className="text-blue-600 hover:text-blue-700 hover:underline font-semibold flex items-center dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
                     Назад
                 </button>
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{isEditMode ? 'Редактирование операции' : 'Новая операция'}</h1>
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-50">{isEditMode ? 'Редактирование операции' : 'Новая операция'}</h1>
                 <div></div> 
             </div>
 
-            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-neutral-800">
-                {error && <p className="bg-red-100 border border-red-400 text-red-700 p-3 rounded mb-4 text-sm whitespace-pre-wrap">{error}</p>}
+            <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+                {error && <p className="bg-red-100 border border-red-400 text-red-700 p-3 rounded mb-4 text-sm whitespace-pre-wrap dark:bg-red-900/30 dark:border-red-600 dark:text-red-300">{error}</p>}
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 pb-4 border-b dark:border-gray-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                     <div>
-                        <label htmlFor="transaction_type" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Тип операции</label>
-                        <select id="transaction_type" value={transactionType} onChange={e => { setTransactionType(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm disabled:bg-gray-100 dark:bg-gray-700">
+                        <label htmlFor="transaction_type" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Тип операции</label>
+                        <select id="transaction_type" value={transactionType} onChange={e => { setTransactionType(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 disabled:bg-gray-100 disabled:text-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:disabled:bg-gray-800 dark:disabled:text-gray-400 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
                             {user?.role !== 'engineer' && <option value="add">Поступление</option>}
                             <option value="consume">Списание</option>
                             {user?.role !== 'engineer' && <option value="transfer">Перемещение</option>}
                         </select>
                     </div>
                     <div>
-                        <label htmlFor="operation_date" className="block text-sm font-medium text-gray-700 dark:text-gray-100 ">Дата и время операции</label>
-                        <input id="operation_date" type="datetime-local" value={operationDate} onChange={e => { setOperationDate(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700"/>
+                        <label htmlFor="operation_date" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Дата и время операции</label>
+                        <input id="operation_date" type="datetime-local" value={operationDate} onChange={e => { setOperationDate(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"/>
                     </div>
                     {(transactionType === 'consume' || transactionType === 'transfer') && (
                         <div>
-                            <label htmlFor="from_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Из объекта (Откуда)</label>
-                            <select id="from_facility" value={fromFacilityId} onChange={e => { setFromFacilityId(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm disabled:bg-gray-100 dark:bg-gray-700">
+                            <label htmlFor="from_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Из объекта (Откуда)</label>
+                            <select id="from_facility" value={fromFacilityId} onChange={e => { setFromFacilityId(e.target.value); setIsDirty(true); }} disabled={user?.role === 'engineer'} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 disabled:bg-gray-100 disabled:text-gray-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:disabled:bg-gray-800 dark:disabled:text-gray-400 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
                                 <option value="">Выберите объект...</option>
                                 {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                             </select>
@@ -292,38 +292,38 @@ function NewOperationPage() {
                     )}
                     {(transactionType === 'add' || transactionType === 'transfer') && (
                         <div>
-                            <label htmlFor="to_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-100">В объект (Куда)</label>
-                            <select id="to_facility" value={toFacilityId} onChange={e => { setToFacilityId(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700">
+                            <label htmlFor="to_facility" className="block text-sm font-medium text-gray-700 dark:text-gray-200">В объект (Куда)</label>
+                            <select id="to_facility" value={toFacilityId} onChange={e => { setToFacilityId(e.target.value); setIsDirty(true); }} required className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
                                 <option value="">Выберите объект...</option>
                                 {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                             </select>
                         </div>
                     )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 dark:border-gray-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Общий комментарий</label>
-                        <textarea id="comment" value={comment} onChange={e => { setComment(e.target.value); setIsDirty(true); }} rows="3" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm dark:bg-gray-700"></textarea>
+                        <label htmlFor="comment" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Общий комментарий</label>
+                        <textarea id="comment" value={comment} onChange={e => { setComment(e.target.value); setIsDirty(true); }} rows="3" className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"></textarea>
                     </div>
                     <div>
-                        <label htmlFor="document_file" className="block text-sm font-medium text-gray-700 dark:text-gray-100">Сопроводительный документ</label>
-                        <input id="document_file" type="file" onChange={(e) => { setDocumentFile(e.target.files[0]); setIsDirty(true); }} className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                        <label htmlFor="document_file" className="block text-sm font-medium text-gray-700 dark:text-gray-200">Сопроводительный документ</label>
+                        <input id="document_file" type="file" onChange={(e) => { setDocumentFile(e.target.files[0]); setIsDirty(true); }} className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900/50 dark:file:text-blue-300 dark:hover:file:bg-blue-900/70 transition-colors"/>
                     </div>
                 </div>
                 
-                <h3 className="text-lg font-semibold mt-6 mb-4 border-t pt-4 dark:text-gray-100 dark:border-gray-500 ">Реагенты</h3>
-                <div className="space-y-6 ">
+                <h3 className="text-lg font-semibold mt-6 mb-4 border-t border-gray-200 dark:border-gray-700 pt-4 text-gray-800 dark:text-gray-100">Реагенты</h3>
+                <div className="space-y-6">
                 {items.map((item, index) => {
                     const stock = sourceInventory.find(inv => inv.chemical.id === parseInt(item.chemicalId));
                     const stockQuantity = stock ? stock.quantity : null;
                     const inStockIds = new Set(sourceInventory.map(invItem => invItem.chemical.id));
                     const stockMap = new Map(sourceInventory.map(invItem => [invItem.chemical.id, parseFloat(invItem.quantity)]));  
                     return (
-                        <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border dark:bg-neutral-800 dark:border-neutral-800 ">
+                        <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-700/50 dark:border-gray-600">
                             <div className="flex-grow">
-                                <label className="text-xs text-gray-500 dark:text-gray-100">Реагент</label>
+                                <label className="text-xs text-gray-500 dark:text-gray-300">Реагент</label>
                                 <div className="flex items-center space-x-1">
-                                    <select required value={item.chemicalId} onChange={e => handleItemChange(index, 'chemicalId', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700">
+                                    <select required value={item.chemicalId} onChange={e => handleItemChange(index, 'chemicalId', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
                                         <option value="">Выберите реагент...</option>
                                         {sortedChemicals.map(c => {
                                 const stockQuantity = stockMap.get(c.id);
@@ -332,11 +332,11 @@ function NewOperationPage() {
                                 if (stockQuantity !== undefined) {
                                     // ... и он строго больше нуля, делаем зеленым
                                     if (stockQuantity > 0) {
-                                        optionClassName = 'font-bold text-green-700';
+                                        optionClassName = 'font-bold text-green-700 dark:text-green-400';
                                     } 
                                     // ... а если меньше нуля, делаем оранжевым/красным
                                     else if (stockQuantity < 0) {
-                                        optionClassName = 'font-semibold text-orange-600';
+                                        optionClassName = 'font-semibold text-orange-600 dark:text-orange-400';
                                     }
                                 }
                                 
@@ -351,29 +351,29 @@ function NewOperationPage() {
                                 );
                             })}
                                     </select>
-                                    <button type="button" onClick={openCreateChemicalModal} title="Добавить новый реагент" className="p-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-400 transition-colors">+</button>
+                                    <button type="button" onClick={() => openCreateChemicalModal(index)} title="Добавить новый реагент" className="p-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100 transition-colors">+</button>
                                 </div>
                             </div>
                             <div className="relative w-1/3">
-                                <label className="text-xs text-gray-500 dark:text-gray-100">Количество, кг</label>
-                                <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во в КГ" className="w-full p-2 border border-gray-300 rounded-md dark:bg-gray-700" />
+                                <label className="text-xs text-gray-500 dark:text-gray-300">Количество, кг</label>
+                                <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во в КГ" className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400" />
                                 {(transactionType === 'consume' || transactionType === 'transfer') && item.chemicalId && (
-                                    <span className={`absolute -bottom-5 right-0 text-xs ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500' : 'text-red-500 font-semibold'}`}>
+                                    <span className={`absolute -bottom-5 right-0 text-xs ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500 dark:text-gray-400' : 'text-red-500 dark:text-red-400 font-semibold'}`}>
                                         {stockQuantity !== null ? `В наличии: ${stockQuantity}` : 'Нет в наличии'}
                                     </span>
                                 )}
                             </div>
                             {items.length > 1 && (
-                                <button type="button" onClick={() => removeItem(index)} title="Удалить строку" className="self-end mb-1 p-2 text-red-500 hover:text-red-700 rounded-full text-2xl font-bold">&times;</button>
+                                <button type="button" onClick={() => removeItem(index)} title="Удалить строку" className="self-end mb-1 p-2 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-full text-2xl font-bold transition-colors">&times;</button>
                             )}
                         </div>
                     );
                 })}
                 </div>
-                <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:underline dark:text-blue-300">+ Добавить строку</button>
+                <button type="button" onClick={addItem} className="mt-4 text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300 transition-colors">+ Добавить строку</button>
                 
-                <div className="mt-8 pt-4 border-t text-right dark:border-gray-500">
-                    <button type="submit" disabled={loading} className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-700 disabled:bg-gray-400 dark:bg-blue-400 dark:hover:bg-blue-600 transition-colors">
+                <div className="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 text-right">
+                    <button type="submit" disabled={loading} className="bg-green-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed dark:bg-green-600 dark:hover:bg-green-500 dark:disabled:bg-gray-600 dark:disabled:text-gray-400 transition-colors">
                         {loading ? 'Выполнение...' : (isEditMode ? 'Сохранить изменения' : 'Выполнить операцию')}
                     </button>
                 </div>

@@ -11,9 +11,10 @@ function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className="relative w-11 h-11 flex items-center justify-center 
-                 rounded-full bg-gray-800 
-                  hover:bg-gray-700 
-                 transition-colors duration-300"
+                 rounded-full bg-gray-100 dark:bg-gray-800
+                 hover:bg-gray-200 dark:hover:bg-gray-700
+                 border border-gray-200 dark:border-gray-700
+                 transition-all duration-300 shadow-sm hover:shadow-md"
       title={`Переключить на ${
         theme === "light" ? "темную" : "светлую"
       } тему`}

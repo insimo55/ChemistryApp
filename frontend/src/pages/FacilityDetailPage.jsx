@@ -65,11 +65,11 @@ function FacilityDetailPage() {
 
     // --- РЕНДЕРИНГ ---
     if (loading && !reportData) { // Показываем полную загрузку только в первый раз
-        return <p className="text-center p-10">Загрузка данных по объекту...</p>;
+        return <p className="text-center p-10 text-gray-900 dark:text-gray-100">Загрузка данных по объекту...</p>;
     }
 
     if (error) {
-        return <p className="text-center p-10 text-red-500">{error}</p>;
+        return <p className="text-center p-10 text-red-600 dark:text-red-400">{error}</p>;
     }
     
     return (
@@ -77,85 +77,115 @@ function FacilityDetailPage() {
             {/* --- ШАПКА СТРАНИЦЫ --- */}
             <div className="flex justify-between items-center mb-6">
                 <div>
-                    <Link to="/" className="text-blue-600 hover:underline text-sm dark:text-red-500">&larr; К списку объектов</Link>
-                    <h1 className="text-3xl font-bold dark:text-white">{facility?.name || 'Загрузка...'}</h1>
+                    <Link to="/" className="text-blue-600 hover:text-blue-700 hover:underline text-sm dark:text-blue-400 dark:hover:text-blue-300 transition-colors flex items-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                        К списку объектов
+                    </Link>
+                    <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-50">{facility?.name || 'Загрузка...'}</h1>
                 </div>
                 <Link 
                     to="/new-operation" 
                     state={{ from: location }}
-                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-blue-500 dark:hover:shadow-blue-300 transition duration-300">
+                    className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-500 dark:hover:shadow-green-500/50 transition-all shadow-sm">
                     Провести операцию
                 </Link>
             </div>
 
             {/* --- БЛОК ВЫБОРА ПЕРИОДА И УПРАВЛЕНИЯ ОТЧЕТОМ --- */}
-            <div className="p-4 border rounded-lg mb-6 bg-white shadow-sm dark:bg-neutral-800 dark:border-black">
-                <h3 className="font-semibold mb-2 text-gray-700 dark:text-gray-100">Отчет по движению реагентов</h3>
+            <div className="p-5 border border-gray-200 dark:border-gray-700 rounded-lg mb-6 bg-white dark:bg-gray-800 shadow-sm">
+                <h3 className="font-semibold mb-4 text-gray-800 dark:text-gray-100">Отчет по движению реагентов</h3>
                 <div className="flex flex-wrap items-end gap-4">
-                    <div>
-                        <label htmlFor="start-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">С даты</label>
-                        <input id="start-date" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full dark:bg-gray-700"/>
+                    <div className="flex-1 min-w-[200px]">
+                        <label htmlFor="start-date" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">С даты</label>
+                        <input 
+                            id="start-date" 
+                            type="date" 
+                            value={startDate} 
+                            onChange={e => setStartDate(e.target.value)} 
+                            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                        />
                     </div>
-                    <div>
-                        <label htmlFor="end-date" className="block text-xs font-medium text-gray-600 dark:text-gray-100">По дату</label>
-                        <input id="end-date" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="mt-1 p-2 border border-gray-300 rounded-md shadow-sm w-full dark:bg-gray-700"/>
+                    <div className="flex-1 min-w-[200px]">
+                        <label htmlFor="end-date" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">По дату</label>
+                        <input 
+                            id="end-date" 
+                            type="date" 
+                            value={endDate} 
+                            onChange={e => setEndDate(e.target.value)} 
+                            className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                        />
                     </div>
-                    {/* Кнопка "Обновить" теперь не нужна, так как отчет обновляется автоматически при смене дат */}
                 </div>
             </div>
 
             {/* --- БЛОК С ОБЩИМИ ИТОГАМИ (SUMMARY) --- */}
-            {loading && <p className="text-center p-4">Обновление отчета...</p>}
+            {loading && <p className="text-center p-4 text-gray-600 dark:text-gray-400">Обновление отчета...</p>}
             {reportData && !loading && (
-                <div className="p-4 rounded-lg mb-6 bg-blue-50 border border-blue-200 dark:bg-neutral-800 dark:border-black">
-                    <h4 className="font-semibold mb-2 text-blue-800 dark:text-blue-400">Итого за период:</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                        <div>
-                            <div className="text-sm text-gray-600 dark:text-gray-200">Начальный остаток, кг</div>
-                            <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.opening_balance}</div>
+                <div className="p-5 rounded-lg mb-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800/50 shadow-sm">
+                    <h4 className="font-semibold mb-4 text-blue-800 dark:text-blue-300">Итого за период:</h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-blue-200 dark:border-blue-700/50 text-center">
+                            <div className="text-xs text-gray-600 dark:text-gray-300 mb-1 uppercase tracking-wide">Начальный остаток</div>
+                            <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.opening_balance}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
                         </div>
-                        <div>
-                            <div className="text-sm text-green-700 dark:text-green-400">Приход, кг</div>
-                            <div className="text-xl font-bold text-green-700 dark:text-green-400">+{reportData.summary.income}</div>
+                        <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-green-200 dark:border-green-700/50 text-center">
+                            <div className="text-xs text-green-700 dark:text-green-400 mb-1 uppercase tracking-wide">Приход</div>
+                            <div className="text-2xl font-bold text-green-700 dark:text-green-400">+{reportData.summary.income}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
                         </div>
-                        <div>
-                            <div className="text-sm text-red-700 dark:text-red-500">Расход, кг</div>
-                            <div className="text-xl font-bold text-red-700 dark:text-red-500">-{reportData.summary.outcome}</div>
+                        <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-red-200 dark:border-red-700/50 text-center">
+                            <div className="text-xs text-red-700 dark:text-red-400 mb-1 uppercase tracking-wide">Расход</div>
+                            <div className="text-2xl font-bold text-red-700 dark:text-red-400">-{reportData.summary.outcome}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
                         </div>
-                         <div>
-                            <div className="text-sm text-gray-600 dark:text-gray-200">Конечный остаток, кг</div>
-                            <div className="text-xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.closing_balance}</div>
+                        <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-blue-200 dark:border-blue-700/50 text-center">
+                            <div className="text-xs text-gray-600 dark:text-gray-300 mb-1 uppercase tracking-wide">Конечный остаток</div>
+                            <div className="text-2xl font-bold text-gray-800 dark:text-gray-100">{reportData.summary.closing_balance}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
                         </div>
                     </div>
                 </div>
             )}
 
             {/* --- ОСНОВНАЯ ТАБЛИЦА С ДЕТАЛИЗАЦИЕЙ --- */}
-            <h2 className="text-2xl font-semibold mb-4 dark:text-gray-100">Детализация по реагентам</h2>
-            <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Детализация по реагентам</h2>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                 <table className="min-w-full">
-                    <thead className="bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700">
+                    <thead className="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
-                            <th className="p-3 text-left text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Реагент</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Нач. остаток, кг</th>
-                            <th className="p-3 text-right text-xs font-semibold text-green-600 uppercase dark:text-green-400">Приход, кг</th>
-                            <th className="p-3 text-right text-xs font-semibold text-red-600 uppercase dark:text-red-500">Расход, кг</th>
-                            <th className="p-3 text-right text-xs font-semibold text-gray-600 uppercase dark:text-gray-100">Кон. остаток, кг</th>
+                            <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Реагент</th>
+                            <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Нач. остаток, кг</th>
+                            <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider">Приход, кг</th>
+                            <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider">Расход, кг</th>
+                            <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Кон. остаток, кг</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                         {reportData?.details.slice().sort((a, b) => a.chemical_name.localeCompare(b.chemical_name)).map((item) => (
-                            <tr key={item.chemical_id} className="hover:bg-gray-100 cursor-pointer dark:bg-gray-700 dark:hover:bg-neutral-600" onClick={() => setHistoryChemical(item)} title="Нажмите, чтобы посмотреть детальное движение">
-                                <td className="p-3 whitespace-nowrap dark:text-gray-200">{item.chemical_name} <span className="text-xs text-gray-400 dark:text-neutral-300">({item.unit})</span></td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono dark:text-gray-100">{item.opening_balance}</td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono text-green-600 dark:text-green-400">+{item.income}</td>
-                                <td className="p-3 whitespace-nowrap text-right font-mono text-red-600 dark:text-red-300">-{item.outcome}</td>
-                                <td className={`p-3 whitespace-nowrap text-right font-mono font-bold dark:font-normal dark:text-gray-100 ${parseFloat(item.closing_balance) < 0 ? 'text-red-600' : ''}`}>{item.closing_balance}</td>
+                            <tr 
+                                key={item.chemical_id} 
+                                className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors bg-white dark:bg-gray-800" 
+                                onClick={() => setHistoryChemical(item)} 
+                                title="Нажмите, чтобы посмотреть детальное движение"
+                            >
+                                <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                                    <span className="font-medium">{item.chemical_name}</span>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({item.unit})</span>
+                                </td>
+                                <td className="px-5 py-4 whitespace-nowrap text-right font-mono text-sm text-gray-700 dark:text-gray-300">{item.opening_balance}</td>
+                                <td className="px-5 py-4 whitespace-nowrap text-right font-mono text-sm text-green-600 dark:text-green-400 font-medium">+{item.income}</td>
+                                <td className="px-5 py-4 whitespace-nowrap text-right font-mono text-sm text-red-600 dark:text-red-400 font-medium">-{item.outcome}</td>
+                                <td className={`px-5 py-4 whitespace-nowrap text-right font-mono text-sm font-bold dark:font-semibold ${parseFloat(item.closing_balance) < 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-gray-100'}`}>
+                                    {item.closing_balance}
+                                </td>
                             </tr>
                         ))}
                          {(!reportData?.details || reportData?.details.length === 0) && !loading && (
                             <tr>
-                                <td colSpan="5" className="text-center p-10 text-gray-500">Нет данных о движении реагентов за выбранный период.</td>
+                                <td colSpan="5" className="text-center p-10 text-gray-500 dark:text-gray-400">
+                                    Нет данных о движении реагентов за выбранный период.
+                                </td>
                             </tr>
                         )}
                     </tbody>
