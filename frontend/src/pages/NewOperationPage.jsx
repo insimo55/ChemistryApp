@@ -255,7 +255,7 @@ function NewOperationPage() {
     if (loading && isEditMode) return <p className="text-gray-900 dark:text-gray-100">Загрузка операции...</p>;
 
      return (
-        <div>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-4">
                 <button onClick={handleBack} className="text-blue-600 hover:text-blue-700 hover:underline font-semibold flex items-center dark:text-blue-400 dark:hover:text-blue-300 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
@@ -319,10 +319,10 @@ function NewOperationPage() {
                     const inStockIds = new Set(sourceInventory.map(invItem => invItem.chemical.id));
                     const stockMap = new Map(sourceInventory.map(invItem => [invItem.chemical.id, parseFloat(invItem.quantity)]));  
                     return (
-                        <div key={item.id} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-700/50 dark:border-gray-600">
-                            <div className="flex-grow">
+                        <div key={item.id} className="flex flex-col md:flex-row md:items-center gap-4 p-3 bg-gray-50 rounded-md border border-gray-200 dark:bg-gray-700/50 dark:border-gray-600">
+                            <div className="w-full md:flex-1">
                                 <label className="text-xs text-gray-500 dark:text-gray-300">Реагент</label>
-                                <div className="flex items-center space-x-1">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-1 gap-2">
                                     <select required value={item.chemicalId} onChange={e => handleItemChange(index, 'chemicalId', e.target.value)} className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
                                         <option value="">Выберите реагент...</option>
                                         {sortedChemicals.map(c => {
@@ -351,20 +351,20 @@ function NewOperationPage() {
                                 );
                             })}
                                     </select>
-                                    <button type="button" onClick={() => openCreateChemicalModal(index)} title="Добавить новый реагент" className="p-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100 transition-colors">+</button>
+                                    <button type="button" onClick={() => openCreateChemicalModal(index)} title="Добавить новый реагент" className="p-2 bg-gray-200 rounded hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-100 transition-colors w-full sm:w-auto text-center">+</button>
                                 </div>
                             </div>
-                            <div className="relative w-1/3">
+                            <div className="relative w-full md:w-1/3">
                                 <label className="text-xs text-gray-500 dark:text-gray-300">Количество, кг</label>
                                 <input required type="number" step="0.01" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} placeholder="Кол-во в КГ" className="w-full p-2 border border-gray-300 rounded-md bg-white text-gray-900 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400" />
                                 {(transactionType === 'consume' || transactionType === 'transfer') && item.chemicalId && (
-                                    <span className={`absolute -bottom-5 right-0 text-xs ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500 dark:text-gray-400' : 'text-red-500 dark:text-red-400 font-semibold'}`}>
+                                    <span className={`mt-2 block text-xs md:absolute md:mt-0 md:-bottom-5 md:right-0 ${stockQuantity !== null && stockQuantity > 0 ? 'text-gray-500 dark:text-gray-400' : 'text-red-500 dark:text-red-400 font-semibold'}`}>
                                         {stockQuantity !== null ? `В наличии: ${stockQuantity}` : 'Нет в наличии'}
                                     </span>
                                 )}
                             </div>
                             {items.length > 1 && (
-                                <button type="button" onClick={() => removeItem(index)} title="Удалить строку" className="self-end mb-1 p-2 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-full text-2xl font-bold transition-colors">&times;</button>
+                                <button type="button" onClick={() => removeItem(index)} title="Удалить строку" className="self-start md:self-end md:mb-1 p-2 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-full text-2xl font-bold transition-colors">&times;</button>
                             )}
                         </div>
                     );

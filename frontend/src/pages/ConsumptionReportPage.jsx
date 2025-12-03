@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import apiClient from '../api';
 import Select from 'react-select';
+import { useTheme } from '../context/ThemeProvider';
 
 function ConsumptionReportPage() {
+    const { theme } = useTheme();
     const [reportData, setReportData] = useState([]);
     const [loading, setLoading] = useState(false);
     
@@ -98,56 +100,152 @@ function ConsumptionReportPage() {
         setFilters(prev => ({...prev, [name]: value }));
     };
 
+    // Кастомные стили для React Select (адаптивные для темной темы)
+    const isDark = theme === 'dark';
+    const customSelectStyles = {
+        control: (base, state) => ({
+            ...base,
+            backgroundColor: isDark ? '#374151' : '#ffffff',
+            borderColor: state.isFocused 
+                ? (isDark ? '#60a5fa' : '#3b82f6')
+                : (isDark ? '#4b5563' : '#d1d5db'),
+            boxShadow: state.isFocused 
+                ? (isDark ? '0 0 0 1px #60a5fa' : '0 0 0 1px #3b82f6')
+                : 'none',
+            '&:hover': {
+                borderColor: isDark ? '#60a5fa' : '#3b82f6',
+            },
+        }),
+        menu: (base) => ({
+            ...base,
+            backgroundColor: isDark ? '#374151' : '#ffffff',
+            border: isDark ? '1px solid #4b5563' : '1px solid #e5e7eb',
+        }),
+        option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected
+                ? (isDark ? '#2563eb' : '#3b82f6')
+                : state.isFocused
+                ? (isDark ? '#4b5563' : '#f3f4f6')
+                : 'transparent',
+            color: isDark ? '#f3f4f6' : '#111827',
+            '&:active': {
+                backgroundColor: isDark ? '#2563eb' : '#3b82f6',
+            },
+        }),
+        multiValue: (base) => ({
+            ...base,
+            backgroundColor: isDark ? '#4b5563' : '#e5e7eb',
+        }),
+        multiValueLabel: (base) => ({
+            ...base,
+            color: isDark ? '#f3f4f6' : '#111827',
+        }),
+        multiValueRemove: (base) => ({
+            ...base,
+            color: isDark ? '#f3f4f6' : '#111827',
+            '&:hover': {
+                backgroundColor: isDark ? '#ef4444' : '#dc2626',
+                color: '#ffffff',
+            },
+        }),
+        input: (base) => ({
+            ...base,
+            color: isDark ? '#f3f4f6' : '#111827',
+        }),
+        placeholder: (base) => ({
+            ...base,
+            color: isDark ? '#9ca3af' : '#6b7280',
+        }),
+        singleValue: (base) => ({
+            ...base,
+            color: isDark ? '#f3f4f6' : '#111827',
+        }),
+    };
+
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">Сводный отчет по расходу</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-800 dark:text-gray-50">Сводный отчет по расходу</h1>
             
             {/* --- ПАНЕЛЬ ФИЛЬТРОВ --- */}
-            <div className="bg-white p-4 rounded-lg shadow-md mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end dark:bg-neutral-700">
-                <div className="lg:col-span-2 ">
-                    <label className="block text-sm ">Объекты</label>
+            <div className="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md mb-6 border border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <div className="lg:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">Объекты</label>
                     <Select
                         isMulti
                         options={facilities}
                         value={filters.selectedFacilities}
-                        onChange={handleFacilitiesChange} 
-                        className=' dark:text-black dark:bg-black'
+                        onChange={handleFacilitiesChange}
+                        placeholder="Выберите объекты..."
+                        styles={customSelectStyles}
                     />
                 </div>
                 <div>
-                    <label className="block text-sm">С даты</label>
-                    <input type="date" name="startDate" value={filters.startDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded dark:text-black"/>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">С даты</label>
+                    <input 
+                        type="date" 
+                        name="startDate" 
+                        value={filters.startDate} 
+                        onChange={handleDateChange} 
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                    />
                 </div>
                  <div>
-                    <label className="block text-sm">По дату</label>
-                    <input type="date" name="endDate" value={filters.endDate} onChange={handleDateChange} className="mt-1 w-full p-2 border rounded dark:text-black"/>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">По дату</label>
+                    <input 
+                        type="date" 
+                        name="endDate" 
+                        value={filters.endDate} 
+                        onChange={handleDateChange} 
+                        className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                    />
                 </div>
-                
             </div>
 
+            {/* Индикатор загрузки */}
+            {loading && (
+                <div className="text-center p-4 text-gray-600 dark:text-gray-400 mb-4">
+                    Загрузка данных...
+                </div>
+            )}
+
             {/* --- ТАБЛИЦА С РЕЗУЛЬТАТОМ --- */}
-            <div className="bg-white shadow-md rounded-lg ">
-                <table className="min-w-full dark:bg-neutral-700">
-                    <thead className="bg-gray-50 dark:bg-neutral-700">
-                        <tr>
-                            <th className="p-3 text-left">Реагент</th>
-                            <th className="p-3 text-right">Суммарный расход</th>
-                            <th className="p-3 text-left">Ед. изм.</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y dark:bg-gray-600">
-                        {reportData.map(item => (
-                            <tr key={item.name}>
-                                <td className="p-3">{item.name}</td>
-                                <td className="p-3 text-right font-mono">{item.total_quantity.toLocaleString('ru-RU')}</td>
-                                <td className="p-3">{item.unit}</td>
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div className="overflow-x-auto custom-scrollbar">
+                    <table className="min-w-full">
+                        <thead className="bg-gray-50 dark:bg-gray-700/50">
+                            <tr>
+                                <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Реагент</th>
+                                <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Суммарный расход</th>
+                                <th className="px-5 py-3 border-b border-gray-200 dark:border-gray-600 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Ед. изм.</th>
                             </tr>
-                        ))}
-                        {reportData.length === 0 && !loading && (
-                            <tr><td colSpan="3" className="text-center p-10 text-gray-500">Нет данных для отображения.</td></tr>
-                        )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                            {reportData.length === 0 && !loading ? (
+                                <tr>
+                                    <td colSpan="3" className="text-center p-10 text-gray-500 dark:text-gray-400">
+                                        {filters.selectedFacilities.length === 0 || !filters.startDate || !filters.endDate
+                                            ? 'Выберите объекты и период для формирования отчета'
+                                            : 'Нет данных для отображения за выбранный период'}
+                                    </td>
+                                </tr>
+                            ) : (
+                                reportData.map(item => (
+                                    <tr 
+                                        key={item.name}
+                                        className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors bg-white dark:bg-gray-800"
+                                    >
+                                        <td className="px-5 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium">{item.name}</td>
+                                        <td className="px-5 py-4 text-right font-mono text-sm text-gray-800 dark:text-gray-200 font-semibold">
+                                            {item.total_quantity.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        </td>
+                                        <td className="px-5 py-4 text-sm text-gray-600 dark:text-gray-400">{item.unit}</td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
