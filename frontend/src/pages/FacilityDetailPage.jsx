@@ -121,6 +121,88 @@ function FacilityDetailPage() {
             {/* --- БЛОК С ОБЩИМИ ИТОГАМИ (SUMMARY) --- */}
             {loading && <p className="text-center p-4 text-gray-600 dark:text-gray-400">Обновление отчета...</p>}
             {reportData && !loading && (
+    <div className="
+        p-4 md:p-5 
+        rounded-xl mb-6 
+        bg-gradient-to-br from-blue-50 to-blue-100 
+        dark:from-blue-900/20 dark:to-blue-800/20
+        border border-blue-200 dark:border-blue-800/50 
+        shadow-sm
+    ">
+        <h4 className="font-semibold mb-3 md:mb-4 text-blue-800 dark:text-blue-300 text-lg md:text-xl">
+            Итого за период:
+        </h4>
+
+        {/* Мобильная версия: карточки одна под другой */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
+
+            {/* Начальный остаток */}
+            <div className="
+                bg-white dark:bg-gray-800/50 
+                p-4 rounded-lg 
+                border border-blue-200 dark:border-blue-700/50
+                flex flex-col items-center
+            ">
+                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1 uppercase tracking-wide">
+                    Начальный остаток
+                </div>
+                <div className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">
+                    {reportData.summary.opening_balance}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
+            </div>
+
+            {/* Приход */}
+            <div className="
+                bg-white dark:bg-gray-800/50 
+                p-4 rounded-lg 
+                border border-green-200 dark:border-green-700/50
+                flex flex-col items-center
+            ">
+                <div className="text-xs text-green-700 dark:text-green-400 mb-1 uppercase tracking-wide">
+                    Приход
+                </div>
+                <div className="text-xl md:text-2xl font-bold text-green-700 dark:text-green-400">
+                    +{reportData.summary.income}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
+            </div>
+
+            {/* Расход */}
+            <div className="
+                bg-white dark:bg-gray-800/50 
+                p-4 rounded-lg 
+                border border-red-200 dark:border-red-700/50
+                flex flex-col items-center
+            ">
+                <div className="text-xs text-red-700 dark:text-red-400 mb-1 uppercase tracking-wide">
+                    Расход
+                </div>
+                <div className="text-xl md:text-2xl font-bold text-red-700 dark:text-red-400">
+                    -{reportData.summary.outcome}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
+            </div>
+
+            {/* Конечный остаток */}
+            <div className="
+                bg-white dark:bg-gray-800/50 
+                p-4 rounded-lg 
+                border border-blue-200 dark:border-blue-700/50
+                flex flex-col items-center
+            ">
+                <div className="text-xs text-gray-600 dark:text-gray-300 mb-1 uppercase tracking-wide">
+                    Конечный остаток
+                </div>
+                <div className="text-xl md:text-2xl font-bold text-gray-800 dark:text-gray-100">
+                    {reportData.summary.closing_balance}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
+            </div>
+        </div>
+    </div>
+)}
+            {/* {reportData && !loading && (
                 <div className="p-5 rounded-lg mb-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800/50 shadow-sm">
                     <h4 className="font-semibold mb-4 text-blue-800 dark:text-blue-300">Итого за период:</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -131,7 +213,7 @@ function FacilityDetailPage() {
                         </div>
                         <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-green-200 dark:border-green-700/50 text-center">
                             <div className="text-xs text-green-700 dark:text-green-400 mb-1 uppercase tracking-wide">Приход</div>
-                            <div className="text-2xl font-bold text-green-700 dark:text-green-400">+{reportData.summary.income}</div>
+                            <div className="md:text-2xl font-bold text-green-700 dark:text-green-400 text-xl">+{reportData.summary.income}</div>
                             <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">кг</div>
                         </div>
                         <div className="bg-white dark:bg-gray-800/50 p-4 rounded-lg border border-red-200 dark:border-red-700/50 text-center">
@@ -146,11 +228,104 @@ function FacilityDetailPage() {
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
 
             {/* --- ОСНОВНАЯ ТАБЛИЦА С ДЕТАЛИЗАЦИЕЙ --- */}
             <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Детализация по реагентам</h2>
-            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+            {/* Мобильные карточки */}
+<div className="space-y-4 md:hidden">
+    {reportData?.details.map(item => (
+        <div
+            key={item.chemical_id}
+            onClick={() => setHistoryChemical(item)}
+            className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm cursor-pointer hover:shadow-md transition"
+        >
+            <div className="flex justify-between items-center mb-2">
+                <div>
+                    <div className="font-semibold text-gray-900 dark:text-gray-100 text-lg">
+                        {item.chemical_name}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                        {item.unit}
+                    </div>
+                </div>
+
+                <div className={`text-right font-bold ${
+                    parseFloat(item.closing_balance) < 0
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-gray-800 dark:text-gray-100'
+                }`}>
+                    {item.closing_balance}
+                </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 text-sm mt-3">
+                <div className="text-center bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Нач.</div>
+                    <div className="font-mono">{item.opening_balance}</div>
+                </div>
+                <div className="text-center bg-green-50 dark:bg-green-900/20 p-2 rounded-lg">
+                    <div className="text-xs text-green-600 dark:text-green-400">Приход</div>
+                    <div className="font-mono text-green-600 dark:text-green-400">
+                        +{item.income}
+                    </div>
+                </div>
+                <div className="text-center bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                    <div className="text-xs text-red-600 dark:text-red-400">Расход</div>
+                    <div className="font-mono text-red-600 dark:text-red-400">
+                        -{item.outcome}
+                    </div>
+                </div>
+            </div>
+        </div>
+    ))}
+
+    {(!reportData?.details || reportData?.details.length === 0) && !loading && (
+        <p className="text-center text-gray-500 dark:text-gray-400 p-4">
+            Нет данных о движении реагентов.
+        </p>
+    )}
+</div>
+
+{/* Десктоп таблица */}
+<div className="hidden md:block bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+    <table className="min-w-full">
+        <thead className="bg-gray-50 dark:bg-gray-700/50">
+            <tr>
+                <th className="px-5 py-3 border-b text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Реагент</th>
+                <th className="px-5 py-3 border-b text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Нач. остаток</th>
+                <th className="px-5 py-3 border-b text-right text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-wider">Приход</th>
+                <th className="px-5 py-3 border-b text-right text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider">Расход</th>
+                <th className="px-5 py-3 border-b text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Кон. остаток</th>
+            </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+            {reportData?.details.map(item => (
+                <tr
+                    key={item.chemical_id}
+                    onClick={() => setHistoryChemical(item)}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition"
+                >
+                    <td className="px-5 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">
+                        <span className="font-medium">{item.chemical_name}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">({item.unit})</span>
+                    </td>
+                    <td className="px-5 py-4 text-right font-mono text-sm">{item.opening_balance}</td>
+                    <td className="px-5 py-4 text-right font-mono text-sm text-green-600 dark:text-green-400">+{item.income}</td>
+                    <td className="px-5 py-4 text-right font-mono text-sm text-red-600 dark:text-red-400">-{item.outcome}</td>
+                    <td className={`px-5 py-4 text-right font-mono text-sm font-bold ${
+                        parseFloat(item.closing_balance) < 0
+                            ? 'text-red-600 dark:text-red-400'
+                            : 'text-gray-800 dark:text-gray-100'
+                    }`}>
+                        {item.closing_balance}
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+</div>
+            {/* <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                 <table className="min-w-full">
                     <thead className="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
@@ -190,7 +365,7 @@ function FacilityDetailPage() {
                         )}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
 
             {/* --- МОДАЛЬНОЕ ОКНО С ИСТОРИЕЙ ОПЕРАЦИЙ --- */}
             <Modal isOpen={!!historyChemical} onClose={() => setHistoryChemical(null)}>
