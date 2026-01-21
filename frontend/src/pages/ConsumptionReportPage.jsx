@@ -68,6 +68,7 @@ function ConsumptionReportPage() {
                 const chemId = tx.chemical.id;
                 if (!summary[chemId]) {
                     summary[chemId] = {
+                        id: chemId,
                         name: tx.chemical.name,
                         unit: tx.chemical.unit_of_measurement,
                         total_quantity: 0
@@ -76,8 +77,11 @@ function ConsumptionReportPage() {
                 summary[chemId].total_quantity += parseFloat(tx.quantity);
             });
             
-            const sortedReport = Object.values(summary).sort((a, b) => a.name.localeCompare(b.name));
-            setReportData(sortedReport);
+            const finalReportData = Object.values(summary)
+                .filter(item => item.total_quantity > 0) // Оставляем только строки с расходом > 0
+                .sort((a, b) => a.name.localeCompare(b.name));
+
+            setReportData(finalReportData);
 
         } catch (error) {
             console.error("Failed to generate report", error);
@@ -232,7 +236,7 @@ function ConsumptionReportPage() {
                             ) : (
                                 reportData.map(item => (
                                     <tr 
-                                        key={item.name}
+                                        key={item.id}
                                         className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors bg-white dark:bg-gray-800"
                                     >
                                         <td className="px-5 py-4 text-sm text-gray-900 dark:text-gray-100 font-medium">{item.name}</td>

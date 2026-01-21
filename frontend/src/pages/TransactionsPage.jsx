@@ -255,7 +255,7 @@ function TransactionsPage() {
       </div>
 
       {/* Модальное окно для деталей. Оно откроется, когда selectedOperation не будет null */}
-      <Modal isOpen={!!selectedOperation} onClose={() => setSelectedOperation(null)}>
+      <Modal isOpen={!!selectedOperation} onClose={() => setSelectedOperation(null)} maxWidth="max-w-lg" overflow="overflow-auto" maxHeigth="max-h-[75%]">
         {selectedOperation && <OperationDetail items={selectedOperation} onActionSuccess={handleActionSuccess} />}
       </Modal>
     </div>

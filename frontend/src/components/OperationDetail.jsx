@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import apiClient from '../api';
+import { button, div } from 'framer-motion/m';
 
 function OperationDetail({ items, onActionSuccess }) {
   if (!items || items.length === 0) {
@@ -11,6 +12,7 @@ function OperationDetail({ items, onActionSuccess }) {
   // Берем первую транзакцию для отображения общих данных
   const representative = items[0];
   const documentUrl = representative.document_file;
+  const isReportOperation = representative.is_from_report;
 
   // Функция для удаления (отправляет запрос на бэкенд)
   const handleDelete = async () => {
@@ -60,6 +62,7 @@ function OperationDetail({ items, onActionSuccess }) {
           
           <div className="font-medium text-gray-600 dark:text-gray-300">Исполнитель:</div>
           <div className="text-gray-900 dark:text-gray-100">{representative.performed_by || <span className="text-gray-400 dark:text-gray-500">—</span>}</div>
+          
         </div>
       </div>
 
@@ -108,18 +111,29 @@ function OperationDetail({ items, onActionSuccess }) {
 
        {/* Кнопки действий */}
        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center gap-3">
+       {isReportOperation && (
+                <div className="bg-blue-50 text-blue-700 p-3 rounded-md text-sm my-4">
+                    <p>
+                        Эта операция была создана автоматически из суточного рапорта.
+                        Для ее изменения или удаления используйте <Link to="/operations" className="font-bold underline">Реестр загрузок</Link>.
+                    </p>
+                </div>
+            )}
+        {!isReportOperation ? (
             <button 
-                onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-sm"
-            >
-                Удалить
-            </button>
-            <Link
+            onClick={handleDelete}
+            className="bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-sm"
+        >
+            Удалить
+        </button>
+        ):(<div></div>)}
+            {!isReportOperation ?(<Link
                 to={`/operation/edit/${representative.operation_uuid}`}
                 className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-md transition-colors shadow-sm text-center"
             >
                 Редактировать
-            </Link>
+            </Link>):(<div></div>)}
+            
         </div>
     </div>
   );

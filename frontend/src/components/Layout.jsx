@@ -76,18 +76,20 @@ function Layout() {
         <nav className="flex-grow p-4 overflow-y-auto">
           <SidebarLink to="/">Главная (Объекты)</SidebarLink>
           <SidebarLink to="/transactions">История операций</SidebarLink>
-          <SidebarLink to="/new-operation">Провести операцию</SidebarLink>
-
+          {/* <SidebarLink to="/new-operation">Провести операцию</SidebarLink> */}
+          {/* <SidebarLink to="/daily-reports">Суточные рапорты</SidebarLink> */}
+          <SidebarLink to="/operations">Операции</SidebarLink>
           {(user?.role === "admin" || user?.role === "logistician") && (
             <>
-              <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Отчеты</div>
+              <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Аналитика и отчеты</div>
+              <SidebarLink to="/project-analytics">Аналитика по проектам</SidebarLink>
               <SidebarLink to="/reports/consumption">Сводный расход</SidebarLink>
               <div className="mt-4 mb-2 px-4 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Справочники
               </div>
               <SidebarLink to="/requisitions">Заявки</SidebarLink>
               <SidebarLink to="/chemicals">Реагенты</SidebarLink>
-              <SidebarLink to="/facilities-admin">Объекты (Админ)</SidebarLink>
+              <SidebarLink to="/admin-settings">Объекты (Админ)</SidebarLink>
               <SidebarLink to="/well-closures">Закрытие скважин</SidebarLink>
             </>
           )}

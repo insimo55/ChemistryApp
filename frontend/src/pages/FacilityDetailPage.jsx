@@ -84,7 +84,7 @@ function FacilityDetailPage() {
                     <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-50">{facility?.name || 'Загрузка...'}</h1>
                 </div>
                 <Link 
-                    to="/new-operation" 
+                    to="/operations" 
                     state={{ from: location }}
                     className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold py-2 px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-500 dark:hover:shadow-green-500/50 transition-all shadow-sm">
                     Провести операцию

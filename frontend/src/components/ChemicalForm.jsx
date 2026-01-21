@@ -8,12 +8,13 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
     const [name, setName] = useState(chemical?.name || ''); // Если chemical есть, берем его данные
     const [unit, setUnit] = useState(chemical?.unit_of_measurement || 'кг');
     const [desc, setDesc] = useState(chemical?.description || '');
+    const [price, setPrice] = useState(chemical?.price || '0.00');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
      const handleSubmit = async (e) => {
         e.preventDefault();
-        const payload = { name, unit_of_measurement: unit, description: desc };
+        const payload = { name, unit_of_measurement: unit, description: desc, price };
         try {
             if (chemical) { // Если редактируем, то отправляем PATCH
                 await apiClient.patch(`/chemicals/${chemical.id}/`, payload);
@@ -52,6 +53,18 @@ function ChemicalForm({ chemical, onSuccess, onClose }) {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Описание</label>
                     <textarea value={desc} onChange={e => setDesc(e.target.value)} className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm dark:bg-gray-600 dark:text-gray-100 dark:border-neutral-500"></textarea>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-100">Цена за кг (руб.)</label>
+                    <input 
+                            type="number" 
+                            step="0.01"
+                            min="0"
+                            value={price}
+                            onChange={e => setPrice(e.target.value)} 
+                            required 
+                            className="mt-1 block w-full p-2 border-gray-300 border-4 rounded-md shadow-sm dark:bg-gray-600 dark:text-gray-100 dark:border-neutral-500"
+                        />
                 </div>
             </div>
             <div className="mt-6 flex justify-end space-x-3">

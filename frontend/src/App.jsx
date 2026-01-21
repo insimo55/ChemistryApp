@@ -13,14 +13,22 @@ import DashboardPage from './pages/DashboardPage'; // Теперь это стр
 import FacilityDetailPage from './pages/FacilityDetailPage'; // Новая страница для детализации
 import TransactionsPage from './pages/TransactionsPage'; // Полноценная страница истории
 import ChemicalsPage from './pages/ChemicalsPage';
-import FacilitiesAdminPage from './pages/FacilitiesAdminPage'; // Предполагаем, что вы создали этот файл
+import FacilitiesAdminPage from './components/FacilitiesAdminTab'; // Предполагаем, что вы создали этот файл
 import UsersPage from './pages/UsersPage';
-import NewOperationPage from './pages/NewOperationPage';
+
+import NewOperationPage from './components/ManualEntryTab';
+import OperationsCenterPage from './pages/OperationsCenterPage';
+
 import RequisitionsPage from './pages/RequisitionsPage';
 import RequisitionFormPage from './pages/RequisitionFormPage'; 
 import WellClosuresPage from './pages/WellClosuresPage'; 
 import WellClosureFormPage from './pages/WellClosureFormPage';
 import ConsumptionReportPage from './pages/ConsumptionReportPage';
+
+import ReportUploadsPage from './pages/ReportUploadsPage';
+import ProjectAnalyticsPage from './pages/ProjectAnalyticsPage'; 
+
+import AdminSettingsPage from './pages/AdminSettingsPage';
 
 // Заглушка для страницы управления пользователями (пока не создали)
 
@@ -68,8 +76,10 @@ function App() {
             </PrivateRoute>
           }
         >
-           <Route path="new-operation" element={<NewOperationPage />} /> {/* <-- Новый роут */}
-           <Route path="operation/edit/:uuid" element={<NewOperationPage />} /> 
+           
+          <Route path="operations" element={<OperationsCenterPage />} />
+          <Route path="operation/edit/:uuid" element={<NewOperationPage />} />
+          
           {/* Дочерние роуты, которые будут отображаться внутри <Outlet /> в Layout */}
 
           {/* Главная страница (по умолчанию) - теперь это список объектов */}
@@ -87,25 +97,26 @@ function App() {
           {/* Роуты для админов и логистов. Можно обернуть их в общий защитный роут, если нужно. */}
           <Route path="reports/consumption" element={<PrivateRoute><ConsumptionReportPage /></PrivateRoute>} />
           <Route path="chemicals" element={<ChemicalsPage />} />
-          <Route path="facilities-admin" element={<FacilitiesAdminPage />} />
+          <Route path="admin-settings" element={<AdminSettingsPage  />} />
           <Route 
             path="well-closures" 
             element={<AdminRoute><WellClosuresPage /></AdminRoute>} 
           />
           <Route path="well-closures/new" element={<AdminRoute><WellClosureFormPage /></AdminRoute>} /> {/* <-- ДЛЯ СОЗДАНИЯ */}
           <Route path="well-closures/:id" element={<AdminRoute><WellClosureFormPage /></AdminRoute>} /> {/* <-- ДЛЯ РЕДАКТИРОВАНИЯ */}
-
-          
-          {/* Страница управления пользователями, доступная только админу */}
           <Route 
-            path="users" 
-            element={
-                <AdminRoute>
-                    <UsersPage />
-                </AdminRoute>
-            } 
+            path="report-uploads" 
+            element={<AdminRoute><ReportUploadsPage /></AdminRoute>} 
           />
-        </Route>
+          <Route path="project-analytics" element={<ProjectAnalyticsPage />} />
+          <Route path="users" 
+              element={
+                  <AdminRoute>
+                      <UsersPage />
+                  </AdminRoute>
+              } 
+            />
+          </Route>
         
         {/* Роут для обработки всех ненайденных страниц */}
         <Route path="*" element={

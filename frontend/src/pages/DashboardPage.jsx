@@ -66,7 +66,7 @@ function DashboardPage() {
       <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-50">Объекты</h1>
                 <Link 
-                    to="/new-operation" 
+                    to="/operations" 
                     state={{ from: location }} // Запоминаем, откуда пришли
                     className="bg-green-600 hover:bg-green-700 hover:shadow-lg text-white font-bold md:py-2 md:px-4 rounded-lg dark:bg-green-600 dark:hover:bg-green-500 dark:hover:shadow-green-500/70 dark:hover:shadow-2xl transition-all px-1 py-1"
                 >

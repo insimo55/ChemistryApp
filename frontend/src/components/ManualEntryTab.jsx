@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback, useMemo  } from 'react';
 import { useNavigate, useLocation, useParams  } from 'react-router-dom';
 import  apiClient, {API_BASE_URL } from '../api';
 import { useAuthStore } from '../store/auth';
-import Modal from '../components/Modal';
-import ChemicalForm from '../components/ChemicalForm';
+import Modal from './Modal';
+import ChemicalForm from './ChemicalForm';
 
 // Кастомный хук для предупреждения о несохраненных данных
 const useUnsavedChangesWarning = (isDirty) => {
@@ -20,7 +20,7 @@ const useUnsavedChangesWarning = (isDirty) => {
     }, [isDirty]);
 };
 
-function NewOperationPage() {
+function ManualEntryTab() {
     const { uuid } = useParams(); // Получаем uuid из URL. Если его нет, то это режим создания.
     const isEditMode = !!uuid;
     const navigate = useNavigate();
@@ -45,6 +45,10 @@ function NewOperationPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [isDirty, setIsDirty] = useState(false);
+    const [projectId, setProjectId] = useState('');
+    const [projects, setProjects] = useState([]);
+
+
     useUnsavedChangesWarning(isDirty);
 
 
@@ -62,6 +66,7 @@ function NewOperationPage() {
             setFacilities(facRes.data);
         };
         fetchData();
+        apiClient.get('/projects/').then(res => setProjects(res.data.results || res.data));
     }, []);
 
     // Загрузка данных для РЕДАКТИРОВАНИЯ
@@ -185,7 +190,7 @@ function NewOperationPage() {
 
         const itemsPayload = items
             .filter(item => item.chemicalId && item.quantity && parseFloat(item.quantity) > 0)
-            .map(item => ({ chemicalId: item.chemicalId, quantity: item.quantity }));
+            .map(item => ({ chemicalId: item.chemicalId, quantity: item.quantity, project: projectId || null, }));
         
         if (itemsPayload.length === 0) {
             setError('Добавьте хотя бы один реагент с корректным количеством (больше нуля).');
@@ -298,7 +303,15 @@ function NewOperationPage() {
                                 {facilities.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
                             </select>
                         </div>
+                        
                     )}
+                    <div>
+                        <label>Проект (опционально)</label>
+                        <select value={projectId} onChange={e => setProjectId(e.target.value)} className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400">
+                            <option value="">Без проекта</option>
+                            {projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                        </select>
+                    </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
@@ -386,4 +399,4 @@ function NewOperationPage() {
     );
 }
 
-export default NewOperationPage;
+export default ManualEntryTab;
