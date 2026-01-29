@@ -13,6 +13,12 @@ function UploadsRegistryTab({ refreshTrigger }) {
     const [error, setError] = useState('');
     const [selectedGroup, setSelectedGroup] = useState(null);
 
+    // состояния для фильтрации
+    const [searchQuery, setSearchQuery] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [dateTo, setDateTo] = useState('');
+
+
     const fetchReportGroups = useCallback(async () => {
         setLoading(true);
         setError(''); // Сбрасываем ошибку перед запросом
@@ -48,6 +54,22 @@ function UploadsRegistryTab({ refreshTrigger }) {
         }
     };
 
+    const filteredReportGroups = reportGroups.filter(group => {
+        // --- Поиск по проекту / объекту ---
+        const search = searchQuery.toLowerCase();
+        const matchesSearch =
+            group.project_name.toLowerCase().includes(search) ||
+            group.facility_name.toLowerCase().includes(search);
+
+        // --- Фильтр по дате ---
+        const reportDate = new Date(group.report_date);
+        const matchesFrom = dateFrom ? reportDate >= new Date(dateFrom) : true;
+        const matchesTo = dateTo ? reportDate <= new Date(dateTo) : true;
+
+        return matchesSearch && matchesFrom && matchesTo;
+    });
+
+
     // --- УЛУЧШЕННЫЙ UI ЗАГРУЗКИ ---
     if (loading) return (
         <div className="flex flex-col items-center justify-center h-64 text-gray-500">
@@ -73,6 +95,39 @@ function UploadsRegistryTab({ refreshTrigger }) {
                 </div>
             </div>
 
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/40">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                    {/* Поиск */}
+                    <input
+                        type="text"
+                        placeholder="Поиск по проекту или объекту..."
+                        value={searchQuery}
+                        onChange={e => setSearchQuery(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg text-sm
+                                dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+                    />
+
+                    {/* Дата от */}
+                    <input
+                        type="date"
+                        value={dateFrom}
+                        onChange={e => setDateFrom(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg text-sm
+                                dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+                    />
+
+                    {/* Дата до */}
+                    <input
+                        type="date"
+                        value={dateTo}
+                        onChange={e => setDateTo(e.target.value)}
+                        className="w-full px-3 py-2 border rounded-lg text-sm
+                                dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
+                    />
+                </div>
+            </div>
+
             <div className="bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden dark:bg-gray-800 dark:border-gray-700">
                 <div className="overflow-x-auto">
                     <table className="min-w-full leading-normal">
@@ -86,7 +141,7 @@ function UploadsRegistryTab({ refreshTrigger }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                            {reportGroups.length > 0 ? reportGroups.map(group => (
+                            {filteredReportGroups.length > 0 ? filteredReportGroups.map(group => (
                                 <tr 
                                     key={group.operation_uuid} 
                                     // Сделал hover темнее (bg-gray-700/50), чтобы не слепило глаза
@@ -159,7 +214,7 @@ function UploadsRegistryTab({ refreshTrigger }) {
                 {/* Пагинация (футер таблицы) */}
                 <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                     <p className="text-xs text-gray-500 text-right dark:text-gray-400">
-                        Всего записей: {reportGroups.length}
+                        Всего записей: {filteredReportGroups.length}
                     </p>
                 </div>
 

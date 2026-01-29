@@ -34,8 +34,15 @@ function ReportUploadTab({ onUploadSuccess }) {
         if (facilityId) {
             // Загружаем проекты, отфильтрованные по facility
             apiClient.get(`/projects/?facility=${facilityId}`).then(res => {
-                setProjects(res.data.results || res.data);
-                setProjectId(''); // Сбрасываем выбор проекта при смене объекта
+                const allProjects = res.data.results || res.data;
+
+                // ❗️ОСТАВЛЯЕМ ТОЛЬКО НЕ ЗАВЕРШЕННЫЕ
+                const activeProjects = allProjects.filter(
+                    p => p.status !== 'completed'
+                );
+
+                setProjects(activeProjects);
+                setProjectId('');
             });
         } else {
             setProjects([]); // Очищаем, если объект не выбран

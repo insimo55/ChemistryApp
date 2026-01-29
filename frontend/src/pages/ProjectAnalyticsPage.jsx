@@ -27,7 +27,8 @@ function ProjectAnalyticsPage() {
                 name: p.name,
                 facility_name: p.facility_name,
                 start_date: p.start_date, 
-                end_date: p.end_date
+                end_date: p.end_date,
+                status: p.status
             }));
             setProjects(projectsData);
         });
@@ -123,10 +124,22 @@ function ProjectAnalyticsPage() {
     };
 
     // Фильтрация проектов по поисковому запросу
-    const filteredProjects = projects.filter(project => {
+    // const filteredProjects = projects.filter(project => {
+    //     const searchLower = searchQuery.toLowerCase();
+    //     return project.name.toLowerCase().includes(searchLower) ||
+    //            project.facility_name.toLowerCase().includes(searchLower);
+    // });
+
+    const sortedProjects = [...projects].sort((a, b) => {
+        if (a.status === 'completed' && b.status !== 'completed') return 1;
+        if (a.status !== 'completed' && b.status === 'completed') return -1;
+        return 0;
+    });
+
+    const filteredProjects = sortedProjects.filter(project => {
         const searchLower = searchQuery.toLowerCase();
         return project.name.toLowerCase().includes(searchLower) ||
-               project.facility_name.toLowerCase().includes(searchLower);
+            project.facility_name.toLowerCase().includes(searchLower);
     });
 
     return (
@@ -191,43 +204,49 @@ function ProjectAnalyticsPage() {
                     {filteredProjects.length > 0 ? (
                         filteredProjects.map(project => {
                             const isSelected = selectedProjects.includes(project.id);
+                            const isCompleted = project.status === 'completed';
                             return (
                                 <button
                                     key={project.id}
-                                    onClick={() => toggleProject(project.id)}
-                                    className={`relative p-4 rounded-lg border-2 transition-all duration-200 text-left transform active:scale-[0.98] ${
-                                        isSelected
+                                    onClick={() => !isCompleted && toggleProject(project.id)}
+                                    onKeyDown={(e) => {
+                                        if (!isCompleted && (e.key === 'Enter' || e.key === ' ')) {
+                                            e.preventDefault();
+                                            toggleProject(project.id);
+                                        }
+                                    }}
+                                    aria-pressed={isSelected}
+                                    title={isCompleted ? 'Проект завершён' : project.name}
+                                    className={`relative p-4 rounded-lg border-2 text-left transition-all duration-200 transform active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-blue-400 ${isCompleted
+                                        ? 'bg-gray-100 dark:bg-gray-800 opacity-60 border-gray-200 dark:border-gray-600'
+                                        : isSelected
                                             ? 'bg-blue-50 dark:bg-blue-900/30 border-blue-500 dark:border-blue-600 shadow-md'
-                                            : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20'
+                                            : 'bg-white dark:bg-gray-700/60 border-gray-200 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-sm'
                                     }`}
                                 >
+                                    {/* status badge */}
+                                    {isCompleted ? (
+                                        <span className="absolute top-3 right-12 text-xs px-2 py-0.5 rounded-full bg-gray-400 text-white">Завершён</span>
+                                    ) : null}
+
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <Building2 className={`h-4 w-4 flex-shrink-0 ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                                                <Building2 className={`h-5 w-5 flex-shrink-0 ${isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}`} />
                                                 <h3 className={`font-semibold text-sm truncate ${isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}`}>
                                                     {project.name}
                                                 </h3>
                                             </div>
-                                            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">
-                                                {project.facility_name}
-                                            </p>
-                                            {(project.start_date || project.end_date) && (
-                                                <div className="mt-2 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500">
-                                                    <Calendar className="h-3 w-3" />
-                                                    <span>
-                                                        {project.start_date && new Date(project.start_date).toLocaleDateString('ru-RU')}
-                                                        {project.start_date && project.end_date && ' - '}
-                                                        {project.end_date && new Date(project.end_date).toLocaleDateString('ru-RU')}
-                                                    </span>
-                                                </div>
-                                            )}
+
+                                            <div className="flex items-center gap-2 flex-wrap">
+                                                <span className="text-xs bg-gray-100 dark:bg-gray-700/40 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-full truncate">{project.facility_name}</span>
+                                                {(project.start_date || project.end_date) && (
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">{project.start_date ? new Date(project.start_date).toLocaleDateString('ru-RU') : ''}{project.start_date && project.end_date ? ' — ' : ''}{project.end_date ? new Date(project.end_date).toLocaleDateString('ru-RU') : ''}</span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className={`flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                                            isSelected
-                                                ? 'bg-blue-600 dark:bg-blue-500 border-blue-600 dark:border-blue-500'
-                                                : 'border-gray-300 dark:border-gray-500'
-                                        }`}>
+
+                                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-blue-600 dark:bg-blue-500 border-blue-600 dark:border-blue-500' : 'border-gray-300 dark:border-gray-500'}`}>
                                             {isSelected && <Check className="h-3 w-3 text-white" />}
                                         </div>
                                     </div>
