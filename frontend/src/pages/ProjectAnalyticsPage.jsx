@@ -152,7 +152,7 @@ function ProjectAnalyticsPage() {
             </div>
             
             {/* --- ФИЛЬТРЫ --- */}
-            <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+            {/* <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
                     <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     <h2 className="text-lg font-semibold dark:text-white">1. Выберите период</h2>
@@ -173,13 +173,13 @@ function ProjectAnalyticsPage() {
                         </button>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* Блок выбора проектов */}
             <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
                     <Building2 className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                    <h2 className="text-lg font-semibold dark:text-white">2. Выберите Проект (Скважину)</h2>
+                    <h2 className="text-lg font-semibold dark:text-white">1. Выберите Проект (Скважину)</h2>
                     {selectedProjects.length > 0 && (
                         <span className="ml-auto bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium">
                             Выбрано: {selectedProjects.length}
@@ -287,7 +287,7 @@ function ProjectAnalyticsPage() {
             <div className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2 mb-4">
                     <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                    <h2 className="text-lg font-semibold dark:text-white">3. Укажите период вручную</h2>
+                    <h2 className="text-lg font-semibold dark:text-white">2. Укажите период вручную</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="relative">
