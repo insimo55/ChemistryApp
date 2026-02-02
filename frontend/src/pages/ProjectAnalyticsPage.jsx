@@ -208,9 +208,9 @@ function ProjectAnalyticsPage() {
                             return (
                                 <button
                                     key={project.id}
-                                    onClick={() => !isCompleted && toggleProject(project.id)}
+                                    onClick={() => toggleProject(project.id)}
                                     onKeyDown={(e) => {
-                                        if (!isCompleted && (e.key === 'Enter' || e.key === ' ')) {
+                                        if ((e.key === 'Enter' || e.key === ' ')) {
                                             e.preventDefault();
                                             toggleProject(project.id);
                                         }
