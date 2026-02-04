@@ -1,7 +1,17 @@
 // frontend/src/pages/WellClosureFormPage.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import apiClient from '../api';
+
+const IconCalc = ({ className = 'h-4 w-4' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor"><path d="M8 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H8zM7 7h6v2H7V7z"/></svg>
+);
+const IconTrash = ({ className = 'h-4 w-4' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M6 2a1 1 0 00-.993.883L5 3v1H3a1 1 0 000 2h14a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zM7 7a1 1 0 00-1 1v7a2 2 0 002 2h4a2 2 0 002-2V8a1 1 0 10-2 0v7H9V8a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+);
+const IconPlus = ({ className = 'h-4 w-4' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 20 20" fill="currentColor"><path d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"/></svg>
+);
 
 function WellClosureFormPage() {
     const { id } = useParams();
@@ -32,6 +42,23 @@ function WellClosureFormPage() {
         }
     }, [id, isEditMode]);
 
+    // helper - load chemical
+    const chemicalMap = useMemo(() => {
+        const map = {};
+        chemicals.forEach(c => {
+            map[c.id] = c;
+        });
+        return map;
+    }, [chemicals]);
+    
+    const formatMoney = (value) =>
+        new Intl.NumberFormat('ru-RU', {
+            style: 'currency',
+            currency: 'RUB',
+            minimumFractionDigits: 2
+    }).format(value);
+
+
     // Обработчики
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,9 +66,15 @@ function WellClosureFormPage() {
     };
     const handleItemChange = (index, field, value) => {
         const newItems = [...closure.items];
-        newItems[index][field] = value;
+        if (field === 'actual_quantity' || field === 'closed_quantity') {
+            newItems[index][field] = value === '' ? '' : parseFloat(value);
+        } else if (field === 'chemical') {
+            newItems[index][field] = value === '' ? '' : parseInt(value);
+        } else {
+            newItems[index][field] = value;
+        }
         setClosure(prev => ({ ...prev, items: newItems }));
-    };
+    }; 
     const addItem = () => setClosure(prev => ({ ...prev, items: [...prev.items, { id: Date.now(), chemical: '', actual_quantity: 0, closed_quantity: 0 }] }));
     const removeItem = (index) => setClosure(prev => ({ ...prev, items: prev.items.filter((_, i) => i !== index) }));
 
@@ -221,38 +254,79 @@ function WellClosureFormPage() {
                 </div>
 
                 {/* --- СЕКЦИЯ "ПОЗИЦИИ" --- */}
-                <div className="flex justify-between items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Расход реагентов</h3>
-                    <button 
-                        type="button" 
-                        onClick={handleCalculateActuals} 
-                        disabled={!closure.facility || calcLoading} 
-                        className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-md shadow-sm disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
-                        title={!closure.facility ? "Сначала выберите и сохраните связанный объект" : "Рассчитать фактический расход по транзакциям"}
-                    >
-                        {calcLoading ? 'Расчет...' : 'Рассчитать факт'}
-                    </button>
-                </div>
-                <div className="rounded-lg overflow-x-auto custom-scrollbar border border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex items-center space-x-4 mb-3 md:mb-0">
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Расход реагентов</h3>
+                        <div className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20 px-3 py-1 rounded-md">
+                            {closure.items.length} позиция{closure.items.length !== 1 ? 'й' : 'я'}
+                        </div>
+                        <div className="text-sm font-medium text-gray-800 dark:text-gray-100 ml-2">
+                            Незакрытая стоимость: <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 ml-2">{formatMoney(closure.items.reduce((sum, i) => {
+                                const chem = chemicalMap[i.chemical];
+                                return sum + (Number(i.actual_quantity) - Number(i.closed_quantity)) * (chem?.price || 0);
+                            }, 0))}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                        <button 
+                            type="button" 
+                            onClick={handleCalculateActuals} 
+                            disabled={!closure.facility || calcLoading} 
+                            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-500 text-white text-sm px-3 py-2 rounded-md shadow-sm disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                            title={!closure.facility ? "Выберите объект для расчета" : "Рассчитать фактический расход по транзакциям"}
+                        >
+                            <IconCalc className="h-4 w-4 mr-2" /> {calcLoading ? 'Расчет...' : 'Рассчитать факт'}
+                        </button>
+                        <button type="button" onClick={addItem} className="inline-flex items-center bg-green-600 hover:bg-green-700 text-white text-sm px-3 py-2 rounded-md shadow-sm transition-colors">
+                            <IconPlus className="h-4 w-4 mr-2" /> Добавить позицию
+                        </button>
+                    </div>
+                </div> 
+                <div className="rounded-lg overflow-x-auto custom-scrollbar border border-gray-200 dark:border-gray-700 shadow-sm bg-white dark:bg-gray-800"> 
                     <table className="min-w-full">
                         <thead className="bg-gray-50 dark:bg-gray-700/50">
                             <tr>
                                 <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-left text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Реагент</th>
                                 <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Фактический расход, кг</th>
                                 <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Закрытое количество, кг</th>
+                                <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Δ, кг</th>
+                                <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Цена за кг</th>
+                                <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-right text-xs font-semibold text-gray-700 dark:text-gray-200 uppercase tracking-wider">Δ, ₽</th>
                                 <th className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 w-auto"></th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
                             {closure.items.length === 0 ? (
                                 <tr>
-                                    <td colSpan="4" className="text-center p-8 text-gray-500 dark:text-gray-400">
-                                        Нет позиций. Нажмите "+ Добавить позицию" для добавления.
+                                    <td colSpan="7" className="text-center p-10 text-gray-500 dark:text-gray-400">
+                                        <div className="mb-3 text-lg font-medium">Нет позиций</div>
+                                        <button type="button" onClick={addItem} className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm shadow-sm">
+                                            <IconPlus className="h-4 w-4 mr-2" /> Добавить позицию
+                                        </button>
                                     </td>
                                 </tr>
                             ) : (
-                                closure.items.map((item, index) => (
-                                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                                closure.items.map((item, index) => {
+                                    const actual = Number(item.actual_quantity || 0);
+                                    const closed = Number(item.closed_quantity || 0);
+                                    const deltaQty = actual - closed;
+
+                                    const chemical = chemicalMap[item.chemical];
+                                    const price = Number(chemical?.price || 0);
+                                    const deltaMoney = deltaQty * price;
+
+                                    const isMismatch = deltaQty !== 0;
+                                    return (
+                                    <tr
+                                        key={item.id}
+                                        className={`
+                                            transition-colors
+                                            ${isMismatch ? 'bg-yellow-50 dark:bg-yellow-900/20' : ''}
+                                            hover:bg-gray-50 dark:hover:bg-gray-700/30
+                                        `}
+                                    >
+                                        {/* Реагент */}
                                         <td className="px-4 py-3">
                                             <select 
                                                 value={item.chemical} 
@@ -271,40 +345,96 @@ function WellClosureFormPage() {
                                                         ))}
                                             </select>
                                         </td>
+                                        {/* Факт */}
                                         <td className="px-4 py-3">
-                                            <input 
-                                                type="number" 
-                                                step="0.01" 
-                                                value={item.actual_quantity} 
-                                                onChange={e => handleItemChange(index, 'actual_quantity', e.target.value)} 
-                                                required 
-                                                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 text-right focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
-                                            />
-                                        </td>
+                                            <div className="flex items-center justify-end space-x-2">
+                                                <input 
+                                                    type="number" 
+                                                    step="0.01" 
+                                                    value={item.actual_quantity} 
+                                                    onChange={e => handleItemChange(index, 'actual_quantity', e.target.value)} 
+                                                    required 
+                                                    className="w-28 p-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 text-right text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                                                />
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">{chemical?.unit_of_measurement || 'кг'}</span>
+                                            </div>
+                                        </td> 
+                                        {/* Закрыто */}
                                         <td className="px-4 py-3">
-                                            <input 
-                                                type="number" 
-                                                step="0.01" 
-                                                value={item.closed_quantity} 
-                                                onChange={e => handleItemChange(index, 'closed_quantity', e.target.value)} 
-                                                required 
-                                                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 text-right focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
-                                            />
+                                            <div className="flex items-center justify-end space-x-2">
+                                                <input 
+                                                    type="number" 
+                                                    step="0.01" 
+                                                    value={item.closed_quantity} 
+                                                    onChange={e => handleItemChange(index, 'closed_quantity', e.target.value)} 
+                                                    required 
+                                                    className="w-28 p-1 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white text-gray-900 dark:bg-gray-700 dark:text-gray-100 text-right text-sm focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
+                                                />
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">{chemical?.unit_of_measurement || 'кг'}</span>
+                                            </div>
                                         </td>
+                                        {/* Δ количество */}
+                                        <td className="px-4 py-3 text-right font-semibold">
+                                            <span className={
+                                                deltaQty > 0
+                                                    ? 'text-red-600'
+                                                    : deltaQty < 0
+                                                    ? 'text-green-600'
+                                                    : 'text-gray-500'
+                                            }>
+                                                {deltaQty.toFixed(2)}
+                                            </span>
+                                        </td>
+
+                                        {/* Цена */}
+                                        <td className="px-4 py-3 text-right text-gray-600 dark:text-gray-300">
+                                            {price ? formatMoney(price) : '—'}
+                                        </td>
+
+                                        {/* Δ деньги */}
+                                        <td className="px-4 py-3 text-right font-bold">
+                                            <span className={
+                                                deltaMoney > 0
+                                                    ? 'text-red-600'
+                                                    : deltaMoney < 0
+                                                    ? 'text-green-600'
+                                                    : 'text-gray-500'
+                                            }>
+                                                {formatMoney(deltaMoney)}
+                                            </span>
+                                        </td>
+                                        {/* Удалить */}
                                         <td className="px-4 py-3 text-center">
                                             <button 
                                                 type="button" 
                                                 onClick={() => removeItem(index)} 
                                                 title="Удалить позицию" 
-                                                className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-2xl font-bold transition-colors"
+                                                className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-900/20 dark:hover:bg-red-900/30 transition-colors"
                                             >
-                                                &times;
+                                                <IconTrash className="h-4 w-4" />
                                             </button>
-                                        </td>
+                                        </td> 
                                     </tr>
-                                ))
+                                )}
+                            )
                             )}
                         </tbody>
+                        <tfoot className="bg-gray-100 dark:bg-gray-700/40 font-semibold">
+                            <tr>
+                                <td colSpan="5" className="px-4 py-3 text-right">
+                                    Итоговая незакрытая стоимость:
+                                </td>
+                                <td className="px-4 py-3 text-right text-lg">
+                                    {formatMoney(
+                                        closure.items.reduce((sum, i) => {
+                                            const chem = chemicalMap[i.chemical];
+                                            return sum + (Number(i.actual_quantity) - Number(i.closed_quantity)) * (chem?.price || 0);
+                                        }, 0)
+                                    )}
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <button 
